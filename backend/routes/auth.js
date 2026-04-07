@@ -14,7 +14,7 @@ function signToken(user) {
 // POST /api/auth/register
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, gpa, qualificationLevel } = req.body;
 
     if (!name || !email || !password || !role)
       return res.status(400).json({ message: "name, email, password, role are required" });
@@ -27,12 +27,19 @@ router.post("/register", async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
+    const userPayload = {
       name: String(name).trim(),
       email: String(email).toLowerCase().trim(),
       password: hashed,
       role,
-    });
+    };
+
+    if (role === "student") {
+      if (gpa !== undefined && gpa !== "") userPayload.gpa = Number(gpa);
+      if (qualificationLevel !== undefined && qualificationLevel !== "") userPayload.qualificationLevel = String(qualificationLevel).trim();
+    }
+
+    const user = await User.create(userPayload);
 
     const token = signToken(user);
 
@@ -40,8 +47,8 @@ router.post("/register", async (req, res) => {
       token,
       user: { _id: user._id, name: user.name, email: user.email, role: user.role },
     });
-  } catch (err) {
-    console.log("Register error:", err);
+  } catch (error) {
+    console.log("Register error:", error);
     res.status(500).json({ message: "Register failed" });
   }
 });
@@ -65,8 +72,8 @@ router.post("/login", async (req, res) => {
       token,
       user: { _id: user._id, name: user.name, email: user.email, role: user.role },
     });
-  } catch (err) {
-    console.log("Login error:", err);
+  } catch (error) {
+    console.log("Login error:", error);
     res.status(500).json({ message: "Login failed" });
   }
 });

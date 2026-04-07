@@ -7,10 +7,10 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth");
 const programRoutes = require("./routes/programs");
 const applicationRoutes = require("./routes/applications");
-
+const universityDashboardRoutes = require("./routes/universityDashboard");
 const app = express();
 
-// ✅ CORS should be before json()
+//  CORS should be before json()
 const allowedOrigins = [
   process.env.CLIENT_ORIGIN,   // set this to http://localhost:5173
   "http://localhost:5173",
@@ -24,10 +24,10 @@ app.use(
   })
 );
 
-// ✅ preflight (uses SAME config automatically via app.use(cors(...)))
+//  preflight (uses SAME config automatically via app.use(cors(...)))
 app.use(express.json());
 
-app.get("/", (req, res) => res.send("ScholarConnect API running ✅"));
+app.get("/", (req, res) => res.send("ScholarConnect API running "));
 app.get("/api/ping", (req, res) =>
   res.json({ ok: true, origin: req.headers.origin || null })
 );
@@ -35,9 +35,10 @@ app.get("/api/ping", (req, res) =>
 app.use("/api/auth", authRoutes);
 app.use("/api/programs", programRoutes);
 app.use("/api/applications", applicationRoutes);
+app.use("/api/university/dashboard", universityDashboardRoutes);
 
 const PORT = process.env.PORT || 5050;
 
 connectDB().then(() => {
-  app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+  app.listen(PORT, () => console.log(` Server running on http://localhost:${PORT}`));
 });

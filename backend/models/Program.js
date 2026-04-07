@@ -9,17 +9,17 @@ const programSchema = new mongoose.Schema(
       index: true,
     },
 
-    // ✅ display on student card
+    //  display on student card
     universityName: { type: String, required: true, trim: true },
 
-    // ✅ images for card
+    //  images for card
     universityLogoUrl: { type: String, default: "" },   // small logo
     bannerImageUrl: { type: String, default: "" },      // big banner
 
-    // ✅ offer title / label
+    //  offer title / label
     title: { type: String, required: true, trim: true },
 
-    // ✅ money fields (not percentage)
+    //  money fields (not percentage)
     tuitionTotal: { type: Number, default: 0 },         // e.g. 60000
     scholarshipAmount: { type: Number, default: 0 },    // e.g. 45000
 

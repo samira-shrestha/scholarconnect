@@ -6,9 +6,9 @@ module.exports = async function connectDB() {
     if (!uri) throw new Error("MONGO_URI missing in .env");
 
     await mongoose.connect(uri);
-    console.log("✅ MongoDB connected");
-  } catch (err) {
-    console.error("❌ MongoDB connection error:", err.message);
+    console.log(" MongoDB connected");
+  } catch (error) {
+    console.error(" MongoDB connection error:", error.message);
     process.exit(1);
   }
 };

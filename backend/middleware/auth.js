@@ -13,8 +13,8 @@ function auth(req, res, next) {
     req.user = { id: decoded.id, role: decoded.role, name: decoded.name };
 
     next();
-  } catch (err) {
-    console.log("Auth middleware error:", err.message);
+  } catch (error) {
+    console.log("Auth middleware error:", error.message);
     return res.status(401).json({ message: "Invalid or expired token" });
   }
 }

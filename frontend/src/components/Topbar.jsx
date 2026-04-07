@@ -15,9 +15,9 @@ export default function Topbar() {
         padding: "0 16px",
       }}
     >
-      <div style={{ fontWeight: 800 }}>ScholarConnect</div>
+      {/* <div style={{ fontWeight: 600 }}>ScholarConnect</div> */}
       <div style={{ fontSize: 14, opacity: 0.75 }}>
-        {user?.name} • {user?.role}
+        {/* {user?.name} • {user?.role} */}
       </div>
     </div>
   );

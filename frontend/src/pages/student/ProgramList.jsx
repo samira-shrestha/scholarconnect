@@ -8,253 +8,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 
-/* ─────────────────────────────────────────────
-   CSS
-───────────────────────────────────────────── */
-const css = `
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --p: #3aa1c9;
-    --s: #81C5A6;
-    --dark: #0d2d3f;
-    --text: #1a2e38;
-    --muted: #6b8fa0;
-    --bg: #f4f8fb;
-    --card: #ffffff;
-    --border: #e2ecf2;
-    --font: 'Montserrat', sans-serif;
-    --r: 16px;
-    --shadow: 0 2px 16px rgba(13,45,63,0.07);
-    --shadow-lg: 0 16px 48px rgba(13,45,63,0.13);
-  }
-
-  .pl {
-    font-family: var(--font);
-    background: var(--bg);
-    min-height: 100vh;
-    padding: 32px 36px;
-    color: var(--text);
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* ── HEADER ── */
-  .pl-header { margin-bottom: 28px; }
-  .pl-breadcrumb {
-    font-size: 11px; font-weight: 700; color: var(--muted);
-    letter-spacing: 1px; text-transform: uppercase;
-    margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
-  }
-  .pl-breadcrumb-sep { opacity: 0.4; }
-  .pl-title { font-size: 26px; font-weight: 900; color: var(--dark); letter-spacing: -0.8px; margin-bottom: 6px; }
-  .pl-subtitle { font-size: 14px; color: var(--muted); font-weight: 400; line-height: 1.6; }
-
-  /* ── STATS BAR ── */
-  .pl-stats { display: flex; gap: 20px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
-  .pl-stat { display: flex; align-items: center; gap: 8px; }
-  .pl-stat-num { font-size: 20px; font-weight: 900; color: var(--dark); letter-spacing: -0.8px; }
-  .pl-stat-label { font-size: 12px; color: var(--muted); font-weight: 500; }
-  .pl-stat-div { width: 1px; height: 28px; background: var(--border); }
-
-  /* ── TOOLBAR ── */
-  .pl-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
-  .pl-search-wrap {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--card); border: 1.5px solid var(--border);
-    border-radius: 12px; padding: 0 14px;
-    flex: 1; min-width: 200px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .pl-search-wrap:focus-within {
-    border-color: var(--p);
-    box-shadow: 0 0 0 3px rgba(58,161,201,0.1);
-  }
-  .pl-search-icon { color: var(--muted); flex-shrink: 0; }
-  .pl-search {
-    flex: 1; border: none; outline: none; padding: 11px 0;
-    font-size: 13.5px; font-weight: 500; color: var(--text);
-    background: transparent; font-family: var(--font);
-  }
-  .pl-search::placeholder { color: #b0c8d4; font-weight: 400; }
-  .pl-clear-btn {
-    background: none; border: none; cursor: pointer;
-    color: var(--muted); display: flex; padding: 2px;
-    transition: color 0.15s;
-  }
-  .pl-clear-btn:hover { color: var(--dark); }
-
-  .pl-filter-group { display: flex; gap: 8px; flex-wrap: wrap; }
-  .pl-select-wrap {
-    display: flex; align-items: center; gap: 7px;
-    background: var(--card); border: 1.5px solid var(--border);
-    border-radius: 10px; padding: 0 12px; cursor: pointer;
-    transition: border-color 0.18s;
-  }
-  .pl-select-wrap:focus-within { border-color: var(--p); }
-  .pl-select-wrap:hover { border-color: rgba(58,161,201,0.4); }
-  .pl-select {
-    border: none; outline: none; padding: 9px 0;
-    font-size: 13px; font-weight: 600; color: var(--muted);
-    background: transparent; font-family: var(--font);
-    cursor: pointer; appearance: none; padding-right: 4px;
-  }
-  .pl-results-count {
-    font-size: 13px; font-weight: 600; color: var(--muted);
-    white-space: nowrap; margin-left: auto;
-  }
-
-  /* ── GRID ── */
-  .pl-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 20px;
-  }
-
-  /* ── PROGRAM CARD ── */
-  .pl-card {
-    background: var(--card); border-radius: 20px;
-    border: 1.5px solid var(--border); box-shadow: var(--shadow);
-    overflow: hidden; transition: all 0.28s cubic-bezier(0.34,1.1,0.64,1);
-    display: flex; flex-direction: column;
-  }
-  .pl-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: rgba(58,161,201,0.25);
-  }
-
-  /* Banner — half width, logo overlaps left */
-  .pl-banner {
-    height: 160px; position: relative;
-    background: linear-gradient(135deg, #e8f4fa 0%, #d5ede5 100%);
-    overflow: visible; flex-shrink: 0;
-  }
-  .pl-banner-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .pl-banner-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(58,161,201,0.07) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(58,161,201,0.07) 1px, transparent 1px);
-    background-size: 22px 22px;
-  }
-
-  /* Logo — large, left-aligned, overlaps banner bottom */
-  .pl-logo {
-    position: absolute; left: 20px; bottom: -28px;
-    width: 80px; height: 80px; border-radius: 18px;
-    background: white; border: 2px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 8px 24px rgba(13,45,63,0.13);
-    overflow: hidden; z-index: 2; flex-shrink: 0;
-  }
-  .pl-logo img { width: 100%; height: 100%; object-fit: cover; }
-  .pl-logo-fallback {
-    font-size: 28px; font-weight: 900; color: var(--p);
-    font-family: var(--font);
-  }
-
-  /* Card body */
-  .pl-body { padding: 38px 20px 16px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
-
-  /* University name */
-  .pl-univ { font-size: 18px; font-weight: 900; color: var(--dark); letter-spacing: -0.4px; line-height: 1.2; }
-
-  /* QS rank row — orange, like screenshot */
-  .pl-qs-row {
-    display: flex; align-items: center; gap: 7px;
-    font-size: 14px; font-weight: 800; color: #d97706;
-    margin-top: 2px;
-  }
-  .pl-qs-badge {
-    width: 22px; height: 22px; border-radius: 50%;
-    background: #d97706; color: white;
-    font-size: 9px; font-weight: 900; letter-spacing: 0.3px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .pl-divider { height: 1px; background: var(--border); margin: 4px 0; }
-
-  /* Provided offers text block */
-  .pl-offer-label {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.8px;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
-  }
-  .pl-offer-text {
-    font-size: 15.5px; font-weight: 700; color: var(--dark); line-height: 1.45;
-  }
-
-  /* Date rows */
-  .pl-dates { display: flex; flex-direction: column; gap: 7px; }
-  .pl-date-row { display: flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 600; color: var(--muted); }
-  .pl-date-row.deadline { color: #dc2626; }
-  .pl-date-row.soon { color: #f97316; }
-  .pl-date-icon { flex-shrink: 0; }
-
-  /* Card footer */
-  .pl-footer { padding: 4px 20px 20px; }
-
-  /* View Details button — full width, dark like screenshot */
-  .pl-details-btn {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; padding: 14px;
-    border-radius: 14px;
-    background: var(--p); color: white;
-    font-size: 14px; font-weight: 700; font-family: var(--font);
-    text-decoration: none; transition: all 0.22s cubic-bezier(0.34,1.2,0.64,1);
-  }
-  .pl-details-btn:hover {
-    background: var(--dark);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(58,161,201,0.32);
-  }
-
-  /* ── STATES ── */
-  .pl-loading {
-    display: flex; align-items: center; justify-content: center;
-    gap: 12px; padding: 80px;
-    color: var(--muted); font-size: 14px; font-weight: 600;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .spin { animation: spin 0.8s linear infinite; }
-
-  .pl-empty { text-align: center; padding: 80px 24px; }
-  .pl-empty-icon {
-    width: 72px; height: 72px; border-radius: 20px;
-    background: rgba(58,161,201,0.08);
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 20px; color: var(--p);
-  }
-  .pl-empty-title { font-size: 18px; font-weight: 900; color: var(--dark); margin-bottom: 8px; }
-  .pl-empty-sub { font-size: 14px; color: var(--muted); max-width: 320px; margin: 0 auto; line-height: 1.65; }
-
-  .pl-error {
-    display: flex; align-items: center; gap: 10px;
-    background: #fff2f2; border: 1.5px solid #ffd0d0;
-    color: #dc2626; padding: 14px 18px; border-radius: 14px;
-    font-size: 13.5px; font-weight: 600; margin-bottom: 20px;
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
-    .pl { padding: 20px 18px; }
-    .pl-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-  }
-  @media (max-width: 600px) {
-    .pl { padding: 16px 14px; }
-    .pl-grid { grid-template-columns: 1fr; }
-    .pl-stats { gap: 12px; }
-  }
-  .pl-course {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text);
-}
-`;
-
-/* ─── helpers ─── */
+/* helpers */
 const money = (n) =>
   Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 0 });
 
@@ -273,36 +27,36 @@ const deadlineStatus = (d) => {
   return "";
 };
 
-/* ─── Single card ─── */
+/* Single card */
 function ProgramCard({ p }) {
-  const ds = deadlineStatus(p.deadline);
+  const status = deadlineStatus(p.deadline);
 
   /* Build the offer description text from available fields */
   const offerText = p.description
     ? p.description
     : [
-      p.scholarshipAmount > 0 && `$${money(p.scholarshipAmount)} Scholarship`,
-      p.tuitionTotal > 0 && `$${money(p.tuitionTotal)} Tuition`,
+      p.scholarshipAmount > 0 && `Rs ${money(p.scholarshipAmount)} Scholarship`,
+      p.tuitionTotal > 0 && `Rs ${money(p.tuitionTotal)} Tuition`,
     ]
       .filter(Boolean)
       .join(", ") || "View details for full offer information";
 
   return (
-    <div className="pl-card">
+    <div className="bg-brand-card rounded-[20px] border-[1.5px] border-brand-border shadow-[0_2px_16px_rgba(13,45,63,0.07)] overflow-hidden transition-all duration-[280ms] ease-[cubic-bezier(0.34,1.1,0.64,1)] flex flex-col hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(13,45,63,0.13)] hover:border-[rgba(58,161,201,0.25)]">
       {/* Banner */}
-      <div className="pl-banner">
+      <div className="h-[160px] relative bg-gradient-to-br from-[#e8f4fa] to-[#d5ede5] overflow-visible shrink-0">
         {p.bannerImageUrl
-          ? <img src={p.bannerImageUrl} alt="banner" className="pl-banner-img"
+          ? <img src={p.bannerImageUrl} alt="banner" className="w-full h-full object-cover block"
             onError={(e) => { e.currentTarget.style.display = "none"; }} />
-          : <div className="pl-banner-grid" />
+          : <div className="absolute inset-0 bg-[linear-gradient(rgba(58,161,201,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(58,161,201,0.07)_1px,transparent_1px)] bg-[size:22px_22px]" />
         }
 
         {/* Large logo overlapping banner bottom-left */}
-        <div className="pl-logo">
+        <div className="absolute left-5 -bottom-7 w-20 h-20 rounded-[18px] bg-white border-2 border-brand-border flex items-center justify-center shadow-[0_8px_24px_rgba(13,45,63,0.13)] overflow-hidden z-[2] shrink-0">
           {p.universityLogoUrl
-            ? <img src={p.universityLogoUrl} alt={p.universityName}
+            ? <img src={p.universityLogoUrl} alt={p.universityName} className="w-full h-full object-cover"
               onError={(e) => { e.currentTarget.style.display = "none"; }} />
-            : <span className="pl-logo-fallback">
+            : <span className="text-[28px] font-black text-brand font-sans">
               {(p.universityName || "U")[0].toUpperCase()}
             </span>
           }
@@ -310,46 +64,46 @@ function ProgramCard({ p }) {
       </div>
 
       {/* Body */}
-      <div className="pl-body">
+      <div className="pt-[38px] px-5 pb-4 flex-1 flex flex-col gap-3">
         {/* University name */}
-        <div className="pl-univ">{p.universityName || "University"}</div>
-        <div className="pl-course">{p.title || "Program"}</div>
+        <div className="text-[18px] font-black text-[brand-dark] tracking-[-0.4px] leading-[1.2]">{p.universityName || "University"}</div>
+        <div className="text-[15px] font-bold text-brand-text">{p.title || "Program"}</div>
 
         {/* QS rank row — orange like screenshot */}
         {p.qsRankText && (
-          <div className="pl-qs-row">
-            <div className="pl-qs-badge">QS</div>
+          <div className="flex items-center gap-[7px] text-[14px] font-extrabold text-[#d97706] mt-[2px]">
+            <div className="w-[22px] h-[22px] rounded-full bg-[#d97706] text-white text-[9px] font-black tracking-[0.3px] flex items-center justify-center shrink-0">QS</div>
             {p.qsRankText}
           </div>
         )}
 
-        <div className="pl-divider" />
+        <div className="h-[1px] bg-brand-border my-1" />
 
         {/* Provided offer as text */}
         <div>
-          <div className="pl-offer-label">Provided Offers</div>
-          <div className="pl-offer-text">{offerText}</div>
+          <div className="text-[11px] font-bold tracking-[0.8px] uppercase text-brand-muted mb-1.5">Provided Offers</div>
+          <div className="text-[15.5px] font-bold text-brand-dark leading-[1.45]">{offerText}</div>
         </div>
 
-        <div className="pl-divider" />
+        <div className="h-[1px] bg-brand-border my-1" />
 
         {/* Date rows with icons — like screenshot */}
-        <div className="pl-dates">
+        <div className="flex flex-col gap-[7px]">
           {p.deadline && (
-            <div className={`pl-date-row ${ds === "past" ? "deadline" : ds === "soon" ? "soon" : ""}`}>
-              <Calendar size={16} className="pl-date-icon" strokeWidth={1.8} />
+            <div className={`flex items-center gap-[9px] text-[13.5px] font-semibold ${status === "past" ? "text-[#dc2626]" : status === "soon" ? "text-[#f97316]" : "text-brand-muted"}`}>
+              <Calendar size={16} className="shrink-0" strokeWidth={1.8} />
               Deadline: {safeDate(p.deadline)}
             </div>
           )}
           {p.gpaRequired > 0 && (
-            <div className="pl-date-row">
-              <GraduationCap size={16} className="pl-date-icon" strokeWidth={1.8} />
+            <div className="flex items-center gap-[9px] text-[13.5px] font-semibold text-brand-muted">
+              <GraduationCap size={16} className="shrink-0" strokeWidth={1.8} />
               Min GPA: {Number(p.gpaRequired).toFixed(1)}
             </div>
           )}
           {p.country && (
-            <div className="pl-date-row">
-              <MapPin size={16} className="pl-date-icon" strokeWidth={1.8} />
+            <div className="flex items-center gap-[9px] text-[13.5px] font-semibold text-brand-muted">
+              <MapPin size={16} className="shrink-0" strokeWidth={1.8} />
               {p.country}
             </div>
           )}
@@ -357,8 +111,8 @@ function ProgramCard({ p }) {
       </div>
 
       {/* Footer — dark full-width button like screenshot */}
-      <div className="pl-footer">
-        <Link className="pl-details-btn" to={`/student/programs/${p._id}`}>
+      <div className="py-1 px-5 pb-5">
+        <Link className="flex items-center justify-center gap-2 w-full p-3.5 rounded-[14px] bg-brand text-white text-[14px] font-bold font-sans no-underline transition-all duration-[220ms] ease-[cubic-bezier(0.34,1.2,0.64,1)] hover:bg-brand-dark hover:-translate-y-0.5 hover:shadow-[0_6px_18px_rgba(58,161,201,0.32)]" to={`/student/programs/${p._id}`}>
           View Offer Details
         </Link>
       </div>
@@ -366,13 +120,11 @@ function ProgramCard({ p }) {
   );
 }
 
-/* ─────────────────────────────────────────────
-   MAIN COMPONENT
-───────────────────────────────────────────── */
+/* MAIN COMPONENT */
 export default function ProgramList() {
   const [programs, setPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [err, setErr] = useState("");
+  const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
   const [sortBy, setSortBy] = useState("newest");
@@ -381,11 +133,11 @@ export default function ProgramList() {
     (async () => {
       try {
         setLoading(true);
-        const res = await api.get("/programs");
-        const list = Array.isArray(res.data) ? res.data : res.data.programs || [];
+        const response = await api.get("/programs");
+        const list = Array.isArray(response.data) ? response.data : response.data.programs || [];
         setPrograms(list);
       } catch (e) {
-        setErr(e.response?.data?.message || e.message || "Failed to load programs");
+        setError(e.response?.data?.message || e.message || "Failed to load programs");
       } finally {
         setLoading(false);
       }
@@ -418,78 +170,76 @@ export default function ProgramList() {
   const closingSoon = programs.filter((p) => deadlineStatus(p.deadline) === "soon").length;
 
   return (
-    <div className="pl">
-      <style>{css}</style>
-
-      {/* ── HEADER ── */}
-      <div className="pl-header">
-        <div className="pl-breadcrumb">
-          Student Portal <span className="pl-breadcrumb-sep">›</span> Programs
+    <div className="font-sans bg-brand-bg min-h-screen py-8 px-9 text-brand-text antialiased max-md:py-5 max-md:px-[18px] max-sm:py-4 max-sm:px-3.5">
+      {/* HEADER */}
+      <div className="mb-7">
+        <div className="text-[11px] font-bold text-brand-muted tracking-[1px] uppercase mb-2 flex items-center gap-1.5">
+          Student Portal <span className="opacity-40">›</span> Programs
         </div>
-        <h1 className="pl-title">Available Offers</h1>
-        <p className="pl-subtitle">Browse scholarships and apply to programs.</p>
+        <h1 className="text-[26px] font-black text-brand-dark tracking-[-0.8px] mb-1.5">Available Offers</h1>
+        <p className="text-[14px] text-brand-muted font-normal leading-[1.6]">Browse scholarships and apply to programs.</p>
       </div>
 
-      {/* ── STATS ── */}
-      {!loading && !err && (
-        <div className="pl-stats">
-          <div className="pl-stat">
-            <span className="pl-stat-num">{programs.length}</span>
-            <span className="pl-stat-label">Programs</span>
+      {/* STATS */}
+      {!loading && !error && (
+        <div className="flex gap-5 mb-6 flex-wrap items-center max-sm:gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-[20px] font-black text-brand-dark tracking-[-0.8px]">{programs.length}</span>
+            <span className="text-[12px] text-brand-muted font-medium">Programs</span>
           </div>
           {countries.length > 0 && (
             <>
-              <div className="pl-stat-div" />
-              <div className="pl-stat">
-                <span className="pl-stat-num">{countries.length}</span>
-                <span className="pl-stat-label">Countries</span>
+              <div className="w-[1px] h-[28px] bg-brand-border" />
+              <div className="flex items-center gap-2">
+                <span className="text-[20px] font-black text-brand-dark tracking-[-0.8px]">{countries.length}</span>
+                <span className="text-[12px] text-brand-muted font-medium">Countries</span>
               </div>
             </>
           )}
           {closingSoon > 0 && (
             <>
-              <div className="pl-stat-div" />
-              <div className="pl-stat">
-                <span className="pl-stat-num" style={{ color: "#f97316" }}>{closingSoon}</span>
-                <span className="pl-stat-label">Closing Soon</span>
+              <div className="w-[1px] h-[28px] bg-brand-border" />
+              <div className="flex items-center gap-2">
+                <span className="text-[20px] font-black tracking-[-0.8px]" style={{ color: "#f97316" }}>{closingSoon}</span>
+                <span className="text-[12px] text-brand-muted font-medium">Closing Soon</span>
               </div>
             </>
           )}
         </div>
       )}
 
-      {/* ── ERROR ── */}
-      {err && (
-        <div className="pl-error">
-          <AlertCircle size={16} /> {err}
+      {/* ERROR */}
+      {error && (
+        <div className="flex items-center gap-2.5 bg-[#fff2f2] border-[1.5px] border-[#ffd0d0] text-[#dc2626] py-3.5 px-[18px] rounded-[14px] text-[13.5px] font-semibold mb-5">
+          <AlertCircle size={16} /> {error}
         </div>
       )}
 
-      {/* ── TOOLBAR ── */}
-      {!loading && !err && (
-        <div className="pl-toolbar">
-          <div className="pl-search-wrap">
-            <Search size={15} className="pl-search-icon" />
+      {/* TOOLBAR */}
+      {!loading && !error && (
+        <div className="flex items-center gap-2.5 mb-6 flex-wrap">
+          <div className="flex items-center gap-2.5 bg-brand-card border-[1.5px] border-brand-border rounded-xl px-3.5 flex-1 min-w-[200px] transition-all duration-200 focus-within:border-brand focus-within:shadow-[0_0_0_3px_rgba(58,161,201,0.1)]">
+            <Search size={15} className="text-brand-muted shrink-0" />
             <input
-              className="pl-search"
+              className="flex-1 border-none outline-none py-[11px] text-[13.5px] font-medium text-brand-text bg-transparent font-sans placeholder:text-[#b0c8d4] placeholder:font-normal"
               placeholder="Search programs, universities, countries…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
             {search && (
-              <button className="pl-clear-btn" onClick={() => setSearch("")}>
+              <button className="bg-transparent border-none cursor-pointer text-brand-muted flex p-[2px] transition-colors duration-[150ms] hover:text-brand-dark" onClick={() => setSearch("")}>
                 <X size={14} />
               </button>
             )}
           </div>
 
-          <div className="pl-filter-group">
+          <div className="flex gap-2 flex-wrap">
             {/* Country filter */}
             {countries.length > 0 && (
-              <div className="pl-select-wrap">
-                <Globe size={13} style={{ color: "var(--muted)", flexShrink: 0 }} />
+              <div className="flex items-center gap-[7px] bg-brand-card border-[1.5px] border-brand-border rounded-[10px] px-3 cursor-pointer transition-colors duration-[180ms] focus-within:border-brand hover:border-[rgba(58,161,201,0.4)]">
+                <Globe size={13} className="text-brand-muted shrink-0" />
                 <select
-                  className="pl-select"
+                  className="border-none outline-none py-[9px] text-[13px] font-semibold text-brand-muted bg-transparent font-sans cursor-pointer appearance-none pr-1"
                   value={countryFilter}
                   onChange={(e) => setCountryFilter(e.target.value)}
                 >
@@ -498,15 +248,15 @@ export default function ProgramList() {
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
-                <ChevronDown size={12} style={{ color: "var(--muted)", flexShrink: 0 }} />
+                <ChevronDown size={12} className="text-brand-muted shrink-0" />
               </div>
             )}
 
             {/* Sort */}
-            <div className="pl-select-wrap">
-              <SlidersHorizontal size={13} style={{ color: "var(--muted)", flexShrink: 0 }} />
+            <div className="flex items-center gap-[7px] bg-brand-card border-[1.5px] border-brand-border rounded-[10px] px-3 cursor-pointer transition-colors duration-[180ms] focus-within:border-brand hover:border-[rgba(58,161,201,0.4)]">
+              <SlidersHorizontal size={13} className="text-brand-muted shrink-0" />
               <select
-                className="pl-select"
+                className="border-none outline-none py-[9px] text-[13px] font-semibold text-brand-muted bg-transparent font-sans cursor-pointer appearance-none pr-1"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
               >
@@ -515,39 +265,39 @@ export default function ProgramList() {
                 <option value="tuition_asc">Tuition: Low → High</option>
                 <option value="tuition_desc">Tuition: High → Low</option>
               </select>
-              <ChevronDown size={12} style={{ color: "var(--muted)", flexShrink: 0 }} />
+              <ChevronDown size={12} className="text-brand-muted shrink-0" />
             </div>
           </div>
 
           {filtered.length > 0 && (
-            <span className="pl-results-count">
+            <span className="text-[13px] font-semibold text-brand-muted whitespace-nowrap ml-auto">
               {filtered.length} result{filtered.length !== 1 ? "s" : ""}
             </span>
           )}
         </div>
       )}
 
-      {/* ── CONTENT ── */}
+      {/* CONTENT */}
       {loading ? (
-        <div className="pl-loading">
-          <Loader2 size={22} className="spin" /> Loading programs…
+        <div className="flex items-center justify-center gap-3 p-20 text-brand-muted text-[14px] font-semibold">
+          <Loader2 size={22} className="animate-spin" /> Loading programs…
         </div>
       ) : filtered.length === 0 ? (
-        <div className="pl-empty">
-          <div className="pl-empty-icon">
+        <div className="text-center py-20 px-6">
+          <div className="w-[72px] h-[72px] rounded-[20px] bg-[rgba(58,161,201,0.08)] flex items-center justify-center mx-auto mb-5 text-brand">
             <BookOpen size={30} strokeWidth={1.5} />
           </div>
-          <div className="pl-empty-title">
+          <div className="text-[18px] font-black text-brand-dark mb-2">
             {search || countryFilter ? "No results found" : "No offers available right now."}
           </div>
-          <div className="pl-empty-sub">
+          <div className="text-[14px] text-brand-muted max-w-[320px] mx-auto leading-[1.65]">
             {search || countryFilter
               ? "Try adjusting your search or filters."
               : "Check back soon — universities are adding new programs regularly."}
           </div>
         </div>
       ) : (
-        <div className="pl-grid">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-5 max-md:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] max-sm:grid-cols-1">
           {filtered.map((p) => (
             <ProgramCard key={p._id} p={p} />
           ))}
