@@ -22,15 +22,24 @@ import UniversityDashboard from "./pages/university/UniversityDashboard.jsx";
 import ManagePrograms from "./pages/university/ManagePrograms.jsx";
 import UniversityApplications from "./pages/university/UniversityApplications.jsx";
 
+// Admin
+import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+
 export default function App() {
   return (
     <Routes>
       {/* Public */}
       <Route path="/" element={<Landing />} />
+
       <Route path="/student/login" element={<Login role="student" />} />
       <Route path="/student/register" element={<Register role="student" />} />
+
       <Route path="/university/login" element={<Login role="university" />} />
       <Route path="/university/register" element={<Register role="university" />} />
+
+      {/* NEW ADMIN ROUTES */}
+      <Route path="/admin/login" element={<Login role="admin" />} />
+      <Route path="/admin/register" element={<Register role="admin" />} />
 
       {/* Student Portal */}
       <Route
@@ -63,6 +72,20 @@ export default function App() {
         <Route path="dashboard" element={<UniversityDashboard />} />
         <Route path="programs" element={<ManagePrograms />} />
         <Route path="applications" element={<UniversityApplications />} />
+      </Route>
+
+      {/* ADMIN PORTAL */}
+      <Route
+        path="/admin"
+        element={
+          <PrivateRoute>
+            <RoleRoute role="admin">
+              <PortalLayout />
+            </RoleRoute>
+          </PrivateRoute>
+        }
+      >
+        <Route path="dashboard" element={<AdminDashboard />} />
       </Route>
     </Routes>
   );

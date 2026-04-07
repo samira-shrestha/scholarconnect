@@ -145,7 +145,12 @@ export default function ProgramDetail() {
 
           {/* Body */}
           <div className="pt-11 px-7 pb-7">
-            <div className="text-[24px] font-black text-brand-dark tracking-[-0.6px] mb-1.5">{program.universityName || "University"}</div>
+            <div className="flex items-center gap-[8px] mb-1.5">
+              <div className="text-[24px] font-black text-brand-dark tracking-[-0.6px]">{program.universityName || "University"}</div>
+              {program.universityIsVerified && (
+                <CheckCircle2 color="#3AA1C9" size={22} fill="#E8F4FA" strokeWidth={2.5} className="shrink-0" />
+              )}
+            </div>
             <div className="inline-flex items-center gap-[6px] text-[14px] font-semibold text-brand mb-5">
               <BookOpen size={14} strokeWidth={2} />
               {program.title}
@@ -263,7 +268,12 @@ export default function ProgramDetail() {
             <div className="flex items-center gap-[10px] py-2.5 border-b border-brand-border text-[13.5px] last:border-none last:pb-0">
               <Building2 size={15} className="text-brand shrink-0" strokeWidth={1.8} />
               <span className="text-brand-muted font-medium flex-1">Institution</span>
-              <span className="font-bold text-brand-dark text-right">{program.universityName || "—"}</span>
+              <div className="flex items-center gap-1.5 font-bold text-brand-dark text-right justify-end">
+                <span>{program.universityName || "—"}</span>
+                {program.universityIsVerified && (
+                  <CheckCircle2 color="#3AA1C9" size={14} fill="#E8F4FA" strokeWidth={2.5} className="shrink-0" />
+                )}
+              </div>
             </div>
             <div className="flex items-center gap-[10px] py-2.5 border-b border-brand-border text-[13.5px] last:border-none last:pb-0">
               <FileText size={15} className="text-brand shrink-0" strokeWidth={1.8} />

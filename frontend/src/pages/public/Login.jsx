@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { GraduationCap, Building2, ArrowRight, ArrowLeft, Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { GraduationCap, Building2, ArrowRight, ArrowLeft, Mail, Lock, Eye, EyeOff, AlertCircle, Shield } from "lucide-react";
 import api from "../../api/axios.js";
 import { useAuth } from "../../context/AuthContext.jsx";
 
@@ -43,16 +43,16 @@ export default function Login({ role: roleProp }) {
         return;
       }
       saveSession(token, user);
-      nav(user.role === "student" ? "/student/dashboard" : "/university/dashboard");
+      if (user.role === "admin") nav("/admin/dashboard");
+      else if (user.role === "university") nav("/university/dashboard");
+      else nav("/student/dashboard");
     } catch (e2) {
       setErr(e2.response?.data?.message || "Login failed. Please check your credentials.");
       setLoading(false);
     }
   };
-
   return (
     <div className="login-root">
-
 
       {/* ── LEFT PANEL ── */}
       <div className="login-left">
@@ -160,6 +160,26 @@ export default function Login({ role: roleProp }) {
                     <div className="role-check-inner" />
                   </div>
                 </div>
+
+                {/* Admin */}
+                <div
+                  className={`role-card admin ${selectedRole === "admin" ? "selected admin" : ""}`}
+                  onClick={() => setSelectedRole("admin")}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === "Enter" && setSelectedRole("admin")}
+                >
+                  <div className="role-icon-wrap">
+                    <Shield size={24} strokeWidth={1.8} />
+                  </div>
+                  <div className="role-body">
+                    <div className="role-title">I am an Admin</div>
+                    <div className="role-desc">Manage platforms, verify universities, oversee operations.</div>
+                  </div>
+                  <div className="role-check">
+                    <div className="role-check-inner" />
+                  </div>
+                </div>
               </div>
 
               <button
@@ -192,15 +212,17 @@ export default function Login({ role: roleProp }) {
 
               {/* Selected role chip */}
               <div className="login-selected-role">
-                <div className={`login-selected-role-icon ${selectedRole === "university" ? "univ" : "student"}`}>
+                <div className={`login-selected-role-icon ${selectedRole === "university" ? "univ" : selectedRole === "admin" ? "admin" : "student"}`}>
                   {selectedRole === "student"
                     ? <GraduationCap size={17} strokeWidth={2} />
-                    : <Building2 size={17} strokeWidth={2} />
+                    : selectedRole === "admin"
+                      ? <Shield size={17} strokeWidth={2} />
+                      : <Building2 size={17} strokeWidth={2} />
                   }
                 </div>
                 <div>
                   <div className="login-selected-role-label">
-                    {selectedRole === "student" ? "Student Account" : "University Account"}
+                    {selectedRole === "student" ? "Student Account" : selectedRole === "admin" ? "Admin Account" : "University Account"}
                   </div>
                   <div className="login-selected-role-sub">Signing in as a {selectedRole}</div>
                 </div>

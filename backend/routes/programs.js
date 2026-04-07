@@ -5,7 +5,17 @@ const { auth, requireRole } = require("../middleware/auth");
 //  GET /api/programs (public list for students)
 router.get("/", async (req, res) => {
   try {
-    const programs = await Program.find({ isActive: true }).sort({ createdAt: -1 });
+    const programsRaw = await Program.find({ isActive: true })
+      .populate("universityId", "isVerified")
+      .sort({ createdAt: -1 })
+      .lean();
+      
+    const programs = programsRaw.map(p => ({
+      ...p,
+      universityIsVerified: p.universityId?.isVerified || false,
+      universityId: p.universityId?._id || p.universityId
+    }));
+    
     res.json({ programs });
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch programs" });
@@ -25,8 +35,17 @@ router.get("/mine/list", auth, requireRole("university"), async (req, res) => {
 //  GET /api/programs/:id
 router.get("/:id", async (req, res) => {
   try {
-    const program = await Program.findById(req.params.id);
-    if (!program) return res.status(404).json({ message: "Program not found" });
+    const programRaw = await Program.findById(req.params.id)
+      .populate("universityId", "isVerified")
+      .lean();
+    if (!programRaw) return res.status(404).json({ message: "Program not found" });
+    
+    const program = {
+      ...programRaw,
+      universityIsVerified: programRaw.universityId?.isVerified || false,
+      universityId: programRaw.universityId?._id || programRaw.universityId
+    };
+    
     res.json({ program });
   } catch (error) {
     res.status(500).json({ message: "Error fetching program" });

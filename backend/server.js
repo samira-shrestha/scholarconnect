@@ -8,6 +8,7 @@ const authRoutes = require("./routes/auth");
 const programRoutes = require("./routes/programs");
 const applicationRoutes = require("./routes/applications");
 const universityDashboardRoutes = require("./routes/universityDashboard");
+const adminRoutes = require("./routes/admin");
 const app = express();
 
 //  CORS should be before json()
@@ -36,6 +37,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/programs", programRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/university/dashboard", universityDashboardRoutes);
+app.use("/api/admin", adminRoutes);
 
 const PORT = process.env.PORT || 5050;
 

@@ -5,7 +5,7 @@ import {
   Search, Globe, GraduationCap,
   Calendar, BookOpen, X, ChevronDown,
   Loader2, AlertCircle, MapPin,
-  SlidersHorizontal,
+  SlidersHorizontal, CheckCircle2
 } from "lucide-react";
 
 /* helpers */
@@ -66,7 +66,12 @@ function ProgramCard({ p }) {
       {/* Body */}
       <div className="pt-[38px] px-5 pb-4 flex-1 flex flex-col gap-3">
         {/* University name */}
-        <div className="text-[18px] font-black text-[brand-dark] tracking-[-0.4px] leading-[1.2]">{p.universityName || "University"}</div>
+        <div className="flex items-center gap-[6px] mb-[-3px]">
+          <div className="text-[18px] font-black text-[brand-dark] tracking-[-0.4px] leading-[1.2]">{p.universityName || "University"}</div>
+          {p.universityIsVerified && (
+            <CheckCircle2 color="#3AA1C9" size={16} fill="#E8F4FA" strokeWidth={2.5} className="mt-[-2px] shrink-0" />
+          )}
+        </div>
         <div className="text-[15px] font-bold text-brand-text">{p.title || "Program"}</div>
 
         {/* QS rank row — orange like screenshot */}
