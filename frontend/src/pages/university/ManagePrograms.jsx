@@ -4,7 +4,7 @@ import {
   Plus, X, Trash2, Eye, EyeOff, RefreshCw,
   BookOpen, Globe, DollarSign, Calendar, Award,
   Image, Link2, AlertCircle, CheckCircle2,
-  Loader2, MapPin, IndianRupee, Edit
+  Loader2, MapPin, IndianRupee, Edit, Info
 } from "lucide-react";
 
 /* ─────────────────────────────────────────────
@@ -15,6 +15,36 @@ import {
 /* ─── helpers ─── */
 const money = (n) => Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 0 });
 const calcLeft = (t, s) => Math.max(Number(t || 0) - Number(s || 0), 0);
+const calcExpectedScholarship = (tuition, pctString) => {
+  const t = Number(tuition || 0);
+  if (!t || !pctString) return 0;
+  const parts = String(pctString).replace(/%/g, '').split(/[-–]/);
+  const minPct = Number(parts[0]);
+  if (isNaN(minPct)) return 0;
+  if (parts.length >= 2) {
+    const maxPct = Number(parts[1]);
+    return (t * ((minPct + maxPct) / 2)) / 100;
+  }
+  return (t * minPct) / 100;
+};
+const calcEstimatedCost = (tuition, pctString) => {
+  const t = Number(tuition || 0);
+  if (!t || !pctString) return t;
+  const parts = String(pctString).replace(/%/g, '').split(/[-–]/);
+  if (parts.length === 1) {
+    const pct = Number(parts[0]);
+    if (isNaN(pct) || pct < 0 || pct > 100) return money(t);
+    return money(t - (t * pct / 100));
+  } else if (parts.length >= 2) {
+    const pct1 = Number(parts[0]);
+    const pct2 = Number(parts[1]);
+    if (isNaN(pct1) || isNaN(pct2)) return money(t);
+    const minCost = Math.max(t - (t * Math.max(pct1, pct2) / 100), 0);
+    const maxCost = Math.max(t - (t * Math.min(pct1, pct2) / 100), 0);
+    return `${money(minCost)} – ${money(maxCost)}`;
+  }
+  return money(t);
+};
 const fmtDate = (d) => {
   if (!d) return "—";
   const dt = new Date(d);
@@ -22,7 +52,8 @@ const fmtDate = (d) => {
 };
 
 const EMPTY = {
-  title: "", country: "", tuitionTotal: "", scholarshipAmount: "",
+  title: "", country: "", tuitionTotal: "", scholarshipPercentage: "",
+  scholarshipType: "Merit-based", eligibilityCriteria: "", scholarshipAmount: "",
   deadline: "", qsRankText: "", universityLogoUrl: "", bannerImageUrl: "", description: "",
 };
 
@@ -60,6 +91,9 @@ export default function ManagePrograms() {
       title: prog.title || "",
       country: prog.country || "",
       tuitionTotal: prog.tuitionTotal || "",
+      scholarshipPercentage: prog.scholarshipPercentage || (prog.scholarshipAmount ? ((prog.scholarshipAmount / (prog.tuitionTotal || 1)) * 100).toFixed(0) : ""),
+      scholarshipType: prog.scholarshipType || "Merit-based",
+      eligibilityCriteria: prog.eligibilityCriteria || "",
       scholarshipAmount: prog.scholarshipAmount || "",
       deadline: prog.deadline ? new Date(prog.deadline).toISOString().split('T')[0] : "",
       qsRankText: prog.qsRankText || "",
@@ -75,20 +109,34 @@ export default function ManagePrograms() {
   const submitOffer = async (e) => {
     e.preventDefault();
     if (!form.title.trim()) { setFormErr("Offer title is required."); return; }
+    const tu = Number(form.tuitionTotal);
+    if (isNaN(tu) || tu <= 0) { setFormErr("Tuition Total must be a positive number."); return; }
+    if (!form.scholarshipPercentage.trim()) { setFormErr("Scholarship percentage is required."); return; }
+
+    const parts = String(form.scholarshipPercentage).replace(/%/g, '').split(/[-–]/);
+    const validates = parts.every(p => { const n = Number(p.trim()); return !isNaN(n) && n >= 0 && n <= 100; });
+    if (!validates) {
+      setFormErr("Scholarship % must be valid numbers between 0 and 100."); return;
+    }
+
     setFormErr(""); setSaving(true);
     try {
+      const expectedScholarshipAmount = calcExpectedScholarship(form.tuitionTotal, form.scholarshipPercentage);
       const payload = {
         title: form.title.trim(),
         country: form.country.trim(),
-        tuitionTotal: Number(form.tuitionTotal || 0),
-        scholarshipAmount: Number(form.scholarshipAmount || 0),
+        tuitionTotal: tu,
+        scholarshipPercentage: form.scholarshipPercentage.trim(),
+        scholarshipType: form.scholarshipType,
+        eligibilityCriteria: form.eligibilityCriteria.trim(),
+        scholarshipAmount: expectedScholarshipAmount,
         deadline: form.deadline || null,
         qsRankText: form.qsRankText.trim(),
         universityLogoUrl: form.universityLogoUrl.trim(),
         bannerImageUrl: form.bannerImageUrl.trim(),
         description: form.description.trim(),
       };
-      
+
       if (editingId) {
         const res = await api.put(`/programs/${editingId}`, payload);
         setItems((prev) => prev.map((p) => (p._id === editingId ? res.data.program : p)));
@@ -223,9 +271,9 @@ export default function ManagePrograms() {
 
                 <div>
                   <div className="mp-card-offer-label">Provided Offer</div>
-                  <div className="mp-card-offer-amount">${money(p.scholarshipAmount)} scholarship</div>
+                  <div className="mp-card-offer-amount">{p.scholarshipPercentage || "0"}% scholarship</div>
                   <div className="mp-card-offer-sub">
-                    ${money(p.scholarshipAmount)} of ${money(p.tuitionTotal)} — student pays ≈ ${money(calcLeft(p.tuitionTotal, p.scholarshipAmount))}
+                    NPR {money(p.scholarshipAmount)} of NPR {money(p.tuitionTotal)} — student pays ≈ NPR {money(calcLeft(p.tuitionTotal, p.scholarshipAmount))}
                   </div>
                 </div>
 
@@ -307,27 +355,49 @@ export default function ManagePrograms() {
                 <div className="mp-section-sep">Financials</div>
                 <div className="mp-form-row">
                   <div className="mp-field">
-                    <label className="mp-label">Tuition Total ($)</label>
+                    <label className="mp-label">Tuition Total (NPR) <span>*</span></label>
                     <div className="mp-input-wrap">
                       <IndianRupee size={14} className="mp-input-icon" />
-                      <input className="mp-input" type="number" min="0" placeholder="60000" value={form.tuitionTotal} onChange={onChange("tuitionTotal")} />
+                      <input className="mp-input" type="number" min="1" placeholder="60000" value={form.tuitionTotal} onChange={onChange("tuitionTotal")} />
                     </div>
                   </div>
                   <div className="mp-field">
-                    <label className="mp-label">Scholarship Amount ($)</label>
+                    <label className="mp-label">Scholarship (%) <span>*</span></label>
                     <div className="mp-input-wrap">
                       <Award size={14} className="mp-input-icon" />
-                      <input className="mp-input" type="number" min="0" placeholder="45000" value={form.scholarshipAmount} onChange={onChange("scholarshipAmount")} />
+                      <input className="mp-input" type="text" placeholder="e.g. 50 or 20-80" value={form.scholarshipPercentage} onChange={onChange("scholarshipPercentage")} />
                     </div>
                   </div>
                 </div>
 
-                {(form.tuitionTotal || form.scholarshipAmount) && (
-                  <div className="mp-preview">
-                    Scholarship: <strong>${money(form.scholarshipAmount)}</strong> of <strong>${money(form.tuitionTotal)}</strong>
-                    {" · "}Student pays ≈ <strong>${money(calcLeft(form.tuitionTotal, form.scholarshipAmount))}</strong>
+                <div className="mp-form-row">
+                  <div className="mp-field">
+                    <label className="mp-label">Scholarship Type
+                      <span title="The basis on which the scholarship is provided."><Info size={12} style={{ marginLeft: 4, display: 'inline-block' }} /></span>
+                    </label>
+                    <div className="mp-input-wrap">
+                      <select className="mp-input" value={form.scholarshipType} onChange={onChange("scholarshipType")} style={{ paddingLeft: "12px" }}>
+                        <option value="Merit-based">Merit-based</option>
+                        <option value="Need-based">Need-based</option>
+                        <option value="Entrance-based">Entrance-based</option>
+                      </select>
+                    </div>
                   </div>
-                )}
+                  <div className="mp-field">
+                    <label className="mp-label">Eligibility Criteria</label>
+                    <div className="mp-input-wrap">
+                      <Award size={14} className="mp-input-icon" />
+                      <input className="mp-input" type="text" placeholder="e.g. GPA above 3.0 or Entrance top 10%" value={form.eligibilityCriteria} onChange={onChange("eligibilityCriteria")} />
+                    </div>
+                  </div>
+                </div>
+
+                {(form.tuitionTotal && form.scholarshipPercentage) ? (
+                  <div className="mp-preview" style={{ backgroundColor: "#f0fdf4", border: "1px solid #bbf7d0", padding: "12px", borderRadius: "8px", marginTop: "4px", marginBottom: "16px" }}>
+                    <strong style={{ color: "#166534" }}>Estimated Cost After Scholarship</strong><br />
+                    <span style={{ color: "#15803d", fontSize: "14px" }}>You may pay approximately <strong>NPR {calcEstimatedCost(form.tuitionTotal, form.scholarshipPercentage)}</strong> after scholarship</span>
+                  </div>
+                ) : null}
 
                 <div className="mp-section-sep">Dates & Ranking</div>
                 <div className="mp-form-row">

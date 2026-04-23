@@ -38,6 +38,9 @@ export default function Register({ role: propRole }) {
   const [password, setPassword] = useState("");
   const [gpa, setGpa] = useState("");
   const [qualificationLevel, setQualificationLevel] = useState("");
+  const [budget, setBudget] = useState("");
+  const [preferredLocation, setPreferredLocation] = useState("");
+  const [preferredCourse, setPreferredCourse] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -89,6 +92,9 @@ export default function Register({ role: propRole }) {
       if (selectedRole === "student") {
         payload.gpa = gpa ? parseFloat(gpa) : undefined;
         payload.qualificationLevel = qualificationLevel;
+        payload.budget = budget ? parseInt(budget, 10) : undefined;
+        payload.preferredLocation = preferredLocation;
+        payload.preferredCourse = preferredCourse;
       }
 
       const response = await api.post("/auth/register", payload);
@@ -358,6 +364,59 @@ export default function Register({ role: propRole }) {
                           <option value="Bachelor's Degree">Bachelor's Degree</option>
                           <option value="Master's Degree">Master's Degree</option>
                         </select>
+                      </div>
+                    </div>
+                    <div className="reg-field">
+                      <label className="reg-label">Preferred Study Location</label>
+                      <div className="reg-input-wrap">
+                        <select
+                          className="reg-input"
+                          value={preferredLocation}
+                          onChange={(e) => setPreferredLocation(e.target.value)}
+                        >
+                          <option value="" disabled>Select preferred location</option>
+                          <option value="Kathmandu">Kathmandu</option>
+                          <option value="Lalitpur">Lalitpur</option>
+                          <option value="Bhaktapur">Bhaktapur</option>
+                          <option value="Pokhara">Pokhara</option>
+                          <option value="Chitwan">Chitwan</option>
+                          <option value="Biratnagar">Biratnagar</option>
+                          <option value="Dharan">Dharan</option>
+                          <option value="Butwal">Butwal</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="reg-field">
+                      <label className="reg-label">Preferred Course / Major</label>
+                      <div className="reg-input-wrap">
+                        <select
+                          className="reg-input"
+                          value={preferredCourse}
+                          onChange={(e) => setPreferredCourse(e.target.value)}
+                        >
+                          <option value="" disabled>Select preferred course</option>
+                          <option value="Computer Science & IT">Computer Science & IT</option>
+                          <option value="Engineering">Engineering</option>
+                          <option value="Business & Management">Business & Management</option>
+                          <option value="Medicine & Healthcare">Medicine & Healthcare</option>
+                          <option value="Science">Science</option>
+                          <option value="Arts & Humanities">Arts & Humanities</option>
+                          <option value="Law">Law</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="reg-field">
+                      <label className="reg-label">Maximum Budget (Rs)</label>
+                      <div className="reg-input-wrap">
+                        <input
+                          className="reg-input"
+                          type="number"
+                          placeholder="e.g. 500000"
+                          value={budget}
+                          onChange={(e) => setBudget(e.target.value)}
+                        />
                       </div>
                     </div>
                   </>

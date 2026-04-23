@@ -9,6 +9,9 @@ const userSchema = new mongoose.Schema(
     isVerified: { type: Boolean, default: false },
     gpa: { type: Number },
     qualificationLevel: { type: String },
+    budget: { type: Number },
+    preferredLocation: { type: String, trim: true },
+    preferredCourse: { type: String, trim: true },
   },
   { timestamps: true }
 );

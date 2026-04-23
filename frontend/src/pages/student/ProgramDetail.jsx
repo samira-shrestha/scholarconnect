@@ -4,7 +4,7 @@ import api from "../../api/axios.js";
 import {
   ArrowLeft, Globe, DollarSign, GraduationCap, Calendar,
   BookOpen, Building2, Clock, CheckCircle2, AlertCircle,
-  MapPin, Send, Loader2, FileText,
+  MapPin, Send, Loader2, FileText, Award,
 } from "lucide-react";
 
 
@@ -165,14 +165,12 @@ export default function ProgramDetail() {
                 <div className="text-[17px] font-extrabold text-brand-dark tracking-[-0.3px]">{program.country || "—"}</div>
               </div>
               <div className="bg-brand-bg rounded-[14px] p-4 border-[1.5px] border-brand-border transition-colors duration-[180ms] hover:border-[rgba(58,161,201,0.3)]">
-                <div className="flex items-center gap-[6px] text-[10.5px] font-bold tracking-[1px] uppercase text-brand-muted mb-[7px]"> Tuition</div>
-                <div className="text-[17px] font-extrabold text-brand-dark tracking-[-0.3px]">Rs {money(program.tuition)}</div>
+                <div className="flex items-center gap-[6px] text-[10.5px] font-bold tracking-[1px] uppercase text-brand-muted mb-[7px]"> Tuition Total</div>
+                <div className="text-[17px] font-extrabold text-brand-dark tracking-[-0.3px]">NPR {money(program.tuitionTotal)}</div>
               </div>
               <div className="bg-brand-bg rounded-[14px] p-4 border-[1.5px] border-brand-border transition-colors duration-[180ms] hover:border-[rgba(58,161,201,0.3)]">
-                <div className="flex items-center gap-[6px] text-[10.5px] font-bold tracking-[1px] uppercase text-brand-muted mb-[7px]"><GraduationCap size={12} strokeWidth={2} /> Min GPA</div>
-                <div className="text-[17px] font-extrabold text-brand-dark tracking-[-0.3px]">
-                  {program.gpaRequired > 0 ? Number(program.gpaRequired).toFixed(1) : "—"}
-                </div>
+                <div className="flex items-center gap-[6px] text-[10.5px] font-bold tracking-[1px] uppercase text-brand-muted mb-[7px]"><Award size={12} strokeWidth={2} /> Scholarship Type</div>
+                <div className="text-[17px] font-extrabold text-brand-dark tracking-[-0.3px]">{program.scholarshipType || "Merit-based"}</div>
               </div>
               <div className="bg-brand-bg rounded-[14px] p-4 border-[1.5px] border-brand-border transition-colors duration-[180ms] hover:border-[rgba(58,161,201,0.3)]">
                 <div className="flex items-center gap-[6px] text-[10.5px] font-bold tracking-[1px] uppercase text-brand-muted mb-[7px]"><Calendar size={12} strokeWidth={2} /> Deadline</div>
@@ -180,9 +178,15 @@ export default function ProgramDetail() {
                   {fmtDate(program.deadline)}
                 </div>
               </div>
+              {program.eligibilityCriteria && (
+                <div className="bg-brand-bg rounded-[14px] p-4 border-[1.5px] border-brand-border transition-colors duration-[180ms] hover:border-[rgba(58,161,201,0.3)] col-span-2 max-sm:col-span-1">
+                  <div className="flex items-center gap-[6px] text-[10.5px] font-bold tracking-[1px] uppercase text-brand-muted mb-[7px]"><CheckCircle2 size={12} strokeWidth={2} /> Eligibility Criteria</div>
+                  <div className="text-[15px] font-bold text-brand-dark tracking-[-0.1px]">{program.eligibilityCriteria}</div>
+                </div>
+              )}
             </div>
 
-            {/* Description */}s
+            {/* Description */}
             {program.description && (
               <>
                 <div className="h-px bg-brand-border my-5" />
@@ -202,12 +206,15 @@ export default function ProgramDetail() {
               <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:24px_24px]" />
               <div className="relative z-[2] text-[10.5px] font-bold tracking-[1.5px] uppercase text-[#81C5A6] mb-2">Provided Offer</div>
               <div className="relative z-[2] text-[34px] font-black text-white tracking-[-1.5px] leading-none">
-                Rs {money(scholarship > 0 ? scholarship : program.tuition)}
-                {scholarship > 0 && <span className="text-[16px] font-semibold text-white/60 ml-[6px]">scholarship</span>}
+                {program.scholarshipPercentage && program.scholarshipPercentage !== "0" ? (
+                  <>{program.scholarshipPercentage}% <span className="text-[16px] font-semibold text-white/60 ml-[6px]">scholarship</span></>
+                ) : (
+                  <>NPR {money(total)} <span className="text-[16px] font-semibold text-white/60 ml-[6px]">tuition</span></>
+                )}
               </div>
               {scholarship > 0 && total > 0 && (
                 <div className="relative z-[2] text-[12px] text-white/55 font-medium mt-2">
-                  Rs {money(scholarship)} of Rs {money(total)} — student pays ≈ Rs {money(left)}
+                  NPR {money(scholarship)} of NPR {money(total)} — student pays ≈ NPR {money(left)}
                 </div>
               )}
             </div>
@@ -218,12 +225,21 @@ export default function ProgramDetail() {
                   <span className="flex items-center gap-[7px] font-semibold text-brand-muted"><Globe size={14} strokeWidth={1.8} /> Country</span>
                   <span className="font-bold text-brand-dark text-right">{program.country || "—"}</span>
                 </div>
-                <div className="flex items-center justify-between text-[13px] pb-[10px] border-b border-brand-border last:border-none last:pb-0">
-                  <span className="flex items-center gap-[7px] font-semibold text-brand-muted"><GraduationCap size={14} strokeWidth={1.8} /> Min GPA</span>
-                  <span className="font-bold text-brand-dark text-right">
-                    {program.gpaRequired > 0 ? Number(program.gpaRequired).toFixed(1) : "Not specified"}
-                  </span>
-                </div>
+                {program.gpaRequired ? (
+                  <div className="flex items-center justify-between text-[13px] pb-[10px] border-b border-brand-border last:border-none last:pb-0">
+                    <span className="flex items-center gap-[7px] font-semibold text-brand-muted"><GraduationCap size={14} strokeWidth={1.8} /> Min GPA</span>
+                    <span className="font-bold text-brand-dark text-right">
+                      {program.gpaRequired > 0 ? Number(program.gpaRequired).toFixed(1) : "Not specified"}
+                    </span>
+                  </div>
+                ) : program.eligibilityCriteria ? (
+                  <div className="flex items-center justify-between text-[13px] pb-[10px] border-b border-brand-border last:border-none last:pb-0">
+                    <span className="flex items-center gap-[7px] font-semibold text-brand-muted" title={program.eligibilityCriteria}><CheckCircle2 size={14} strokeWidth={1.8} /> Eligibility</span>
+                    <span className="font-bold text-brand-dark text-right" style={{ maxWidth: "140px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      {program.eligibilityCriteria}
+                    </span>
+                  </div>
+                ) : null}
                 <div className="flex items-center justify-between text-[13px] pb-[10px] border-b border-brand-border last:border-none last:pb-0">
                   <span className="flex items-center gap-[7px] font-semibold text-brand-muted"><Clock size={14} strokeWidth={1.8} /> Deadline</span>
                   <span className={`font-bold text-right ${ds === "past" ? "text-[#dc2626]" : ds === "soon" ? "text-[#f97316]" : "text-brand-dark"}`}
@@ -235,7 +251,7 @@ export default function ProgramDetail() {
 
               {/* Apply button — same logic as original */}
               <button
-                className={`w-full p-[14px] rounded-xl border-none text-white text-[15px] font-bold font-sans cursor-pointer flex items-center justify-center gap-[9px] transition-all duration-[220ms] ease-[cubic-bezier(0.34,1.2,0.64,1)] disabled:opacity-55 disabled:cursor-not-allowed hover:not-disabled:bg-brand-dark hover:not-disabled:-translate-y-0.5 hover:not-disabled:shadow-[0_8px_24px_rgba(58,161,201,0.32)] ${applied ? "bg-[#155c40]" : msgType === "error" ? "bg-[#9b1c1c]" : "bg-brand"}`}
+                className={`w-full p-[14px] rounded-xl border-none bg-amber-300 text-white text-[15px] font-bold font-sans cursor-pointer flex items-center justify-center gap-[9px] transition-all duration-[220ms] ease-[cubic-bezier(0.34,1.2,0.64,1)] disabled:opacity-55 disabled:cursor-not-allowed hover:not-disabled:bg-brand-dark hover:not-disabled:-translate-y-0.5 hover:not-disabled:shadow-[0_8px_24px_rgba(58,161,201,0.32)] ${applied ? "bg-[#155c40]" : msgType === "error" ? "bg-[#9b1c1c]" : "bg-brand"}`}
                 onClick={apply}
                 disabled={applying || applied || ds === "past"}
               >

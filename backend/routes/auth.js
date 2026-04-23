@@ -19,7 +19,7 @@ function signToken(user) {
 // POST /api/auth/register
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, password, role, gpa, qualificationLevel } = req.body;
+    const { name, email, password, role, gpa, qualificationLevel, budget, preferredLocation, preferredCourse } = req.body;
 
     if (!name || !email || !password || !role) {
       return res.status(400).json({
@@ -54,6 +54,15 @@ router.post("/register", async (req, res) => {
       }
       if (qualificationLevel !== undefined && qualificationLevel !== "") {
         userPayload.qualificationLevel = String(qualificationLevel).trim();
+      }
+      if (budget !== undefined && budget !== "") {
+        userPayload.budget = Number(budget);
+      }
+      if (preferredLocation !== undefined && preferredLocation !== "") {
+        userPayload.preferredLocation = String(preferredLocation).trim();
+      }
+      if (preferredCourse !== undefined && preferredCourse !== "") {
+        userPayload.preferredCourse = String(preferredCourse).trim();
       }
     }
 

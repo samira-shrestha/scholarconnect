@@ -21,7 +21,10 @@ const programSchema = new mongoose.Schema(
 
     //  money fields (not percentage)
     tuitionTotal: { type: Number, default: 0 },         // e.g. 60000
-    scholarshipAmount: { type: Number, default: 0 },    // e.g. 45000
+    scholarshipAmount: { type: Number, default: 0 },    // Legacy field, keep for safety
+    scholarshipPercentage: { type: String, default: "0" }, // e.g. "50" or "20-80"
+    scholarshipType: { type: String, enum: ["Merit-based", "Need-based", "Entrance-based"], default: "Merit-based" },
+    eligibilityCriteria: { type: String, default: "" },
 
     // optional helpers
     country: { type: String, default: "", trim: true },

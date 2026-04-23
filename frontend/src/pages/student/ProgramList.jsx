@@ -35,8 +35,10 @@ function ProgramCard({ p }) {
   const offerText = p.description
     ? p.description
     : [
-      p.scholarshipAmount > 0 && `Rs ${money(p.scholarshipAmount)} Scholarship`,
-      p.tuitionTotal > 0 && `Rs ${money(p.tuitionTotal)} Tuition`,
+      (p.scholarshipPercentage && p.scholarshipPercentage !== "0")
+        ? `${p.scholarshipPercentage}% Scholarship`
+        : (p.scholarshipAmount > 0 && `NPR ${money(p.scholarshipAmount)} Scholarship`),
+      p.tuitionTotal > 0 && `NPR ${money(p.tuitionTotal)} Tuition`,
     ]
       .filter(Boolean)
       .join(", ") || "View details for full offer information";
@@ -61,6 +63,15 @@ function ProgramCard({ p }) {
             </span>
           }
         </div>
+
+        {/* Match Percentage Badge */}
+        {p.matchPercentage && p.matchPercentage > 0 ? (
+          <div className="absolute top-4 right-4 z-[2]">
+            <div className="inline-flex items-center gap-[6px] backdrop-blur-md rounded-full py-[6px] px-[14px] text-[12px] font-bold border border-[rgba(255,255,255,0.3)] bg-[rgba(58,161,201,0.92)] text-white shadow-sm">
+              {p.matchPercentage}% Match
+            </div>
+          </div>
+        ) : null}
       </div>
 
       {/* Body */}
@@ -132,7 +143,7 @@ export default function ProgramList() {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
-  const [sortBy, setSortBy] = useState("newest");
+  const [sortBy, setSortBy] = useState("match");
 
   useEffect(() => {
     (async () => {
@@ -165,10 +176,16 @@ export default function ProgramList() {
       return matchSearch && matchCountry;
     })
     .sort((a, b) => {
+      if (sortBy === "match") {
+         const mB = b.matchPercentage || 0;
+         const mA = a.matchPercentage || 0;
+         if (mB !== mA) return mB - mA;
+         return new Date(b.createdAt) - new Date(a.createdAt);
+      }
       if (sortBy === "newest") return new Date(b.createdAt) - new Date(a.createdAt);
       if (sortBy === "deadline") return new Date(a.deadline || "9999") - new Date(b.deadline || "9999");
-      if (sortBy === "tuition_asc") return (a.tuition || 0) - (b.tuition || 0);
-      if (sortBy === "tuition_desc") return (b.tuition || 0) - (a.tuition || 0);
+      if (sortBy === "tuition_asc") return (a.tuitionTotal || 0) - (b.tuitionTotal || 0);
+      if (sortBy === "tuition_desc") return (b.tuitionTotal || 0) - (a.tuitionTotal || 0);
       return 0;
     });
 
@@ -265,6 +282,7 @@ export default function ProgramList() {
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
               >
+                <option value="match">Highest Match</option>
                 <option value="newest">Newest</option>
                 <option value="deadline">By Deadline</option>
                 <option value="tuition_asc">Tuition: Low → High</option>
