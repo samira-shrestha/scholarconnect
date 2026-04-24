@@ -54,7 +54,7 @@ const fmtDate = (d) => {
 const EMPTY = {
   title: "", country: "", tuitionTotal: "", scholarshipPercentage: "",
   scholarshipType: "Merit-based", eligibilityCriteria: "", scholarshipAmount: "",
-  deadline: "", qsRankText: "", universityLogoUrl: "", bannerImageUrl: "", description: "",
+  deadline: "", affiliation: "", universityLogoUrl: "", bannerImageUrl: "", description: "",
 };
 
 export default function ManagePrograms() {
@@ -96,7 +96,7 @@ export default function ManagePrograms() {
       eligibilityCriteria: prog.eligibilityCriteria || "",
       scholarshipAmount: prog.scholarshipAmount || "",
       deadline: prog.deadline ? new Date(prog.deadline).toISOString().split('T')[0] : "",
-      qsRankText: prog.qsRankText || "",
+      affiliation: prog.affiliation || "",
       universityLogoUrl: prog.universityLogoUrl || "",
       bannerImageUrl: prog.bannerImageUrl || "",
       description: prog.description || "",
@@ -131,7 +131,7 @@ export default function ManagePrograms() {
         eligibilityCriteria: form.eligibilityCriteria.trim(),
         scholarshipAmount: expectedScholarshipAmount,
         deadline: form.deadline || null,
-        qsRankText: form.qsRankText.trim(),
+        affiliation: form.affiliation.trim(),
         universityLogoUrl: form.universityLogoUrl.trim(),
         bannerImageUrl: form.bannerImageUrl.trim(),
         description: form.description.trim(),
@@ -256,10 +256,10 @@ export default function ManagePrograms() {
               <div className="mp-card-body">
                 <div className="mp-card-univ">{p.universityName}</div>
 
-                {p.qsRankText ? (
+                {p.affiliation ? (
                   <div className="mp-card-qs">
-                    <div className="mp-qs-dot">QS</div>
-                    {p.qsRankText}
+                    <div className="mp-qs-dot">Affiliated to</div>
+                    {p.affiliation}
                   </div>
                 ) : p.country ? (
                   <div className="mp-card-country">
@@ -409,10 +409,10 @@ export default function ManagePrograms() {
                     </div>
                   </div>
                   <div className="mp-field">
-                    <label className="mp-label">QS / Ranking Text</label>
+                    <label className="mp-label">Affiliation (University Name)</label>
                     <div className="mp-input-wrap">
                       <Award size={14} className="mp-input-icon" />
-                      <input className="mp-input" placeholder="e.g. #1" value={form.qsRankText} onChange={onChange("qsRankText")} />
+                      <input className="mp-input" placeholder="e.g. TU, PU" value={form.affiliation} onChange={onChange("affiliation")} />
                     </div>
                   </div>
                 </div>

@@ -85,11 +85,11 @@ function ProgramCard({ p }) {
         </div>
         <div className="text-[15px] font-bold text-brand-text">{p.title || "Program"}</div>
 
-        {/* QS rank row — orange like screenshot */}
-        {p.qsRankText && (
+        {/* Affiliation row */}
+        {p.affiliation && (
           <div className="flex items-center gap-[7px] text-[14px] font-extrabold text-[#d97706] mt-[2px]">
-            <div className="w-[22px] h-[22px] rounded-full bg-[#d97706] text-white text-[9px] font-black tracking-[0.3px] flex items-center justify-center shrink-0">QS</div>
-            {p.qsRankText}
+            <div className="px-[6px] h-[22px] rounded-full bg-[#d97706] text-white text-[9px] font-black tracking-[0.3px] flex items-center justify-center shrink-0">Affiliated to</div>
+            {p.affiliation}
           </div>
         )}
 

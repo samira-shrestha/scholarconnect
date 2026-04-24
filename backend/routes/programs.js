@@ -134,7 +134,7 @@ router.post("/", auth, requireRole("university"), async (req, res) => {
       scholarshipType,
       eligibilityCriteria,
       scholarshipAmount,
-      qsRankText,
+      affiliation,
     } = req.body;
 
     if (!title) return res.status(400).json({ message: "Title is required" });
@@ -156,7 +156,7 @@ router.post("/", auth, requireRole("university"), async (req, res) => {
       scholarshipAmount: Number(scholarshipAmount || 0),
 
       deadline: deadline ? new Date(deadline) : null,
-      qsRankText: (qsRankText || "").trim(),
+      affiliation: (affiliation || "").trim(),
 
       description: (description || "").trim(),
       isActive: true,
@@ -220,7 +220,7 @@ router.put("/:id", auth, requireRole("university"), async (req, res) => {
       scholarshipType,
       eligibilityCriteria,
       scholarshipAmount,
-      qsRankText,
+      affiliation,
     } = req.body;
 
     const program = await Program.findById(req.params.id);
@@ -239,7 +239,7 @@ router.put("/:id", auth, requireRole("university"), async (req, res) => {
     program.eligibilityCriteria = (eligibilityCriteria || "").trim();
     program.scholarshipAmount = Number(scholarshipAmount || 0);
     program.deadline = deadline ? new Date(deadline) : null;
-    program.qsRankText = (qsRankText || "").trim();
+    program.affiliation = (affiliation || "").trim();
     program.universityLogoUrl = (universityLogoUrl || "").trim();
     program.bannerImageUrl = (bannerImageUrl || "").trim();
     program.description = (description || "").trim();

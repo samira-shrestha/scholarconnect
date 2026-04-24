@@ -31,7 +31,7 @@ const programSchema = new mongoose.Schema(
     deadline: { type: Date, default: null },
 
     // optional card extras
-    qsRankText: { type: String, default: "" },          // "Ranked #3 Worldwide"
+    affiliation: { type: String, default: "" },          // "TU", "KU", "PU"
     awardedOn: { type: Date, default: null },           // optional, usually after approval
 
     description: { type: String, default: "" },

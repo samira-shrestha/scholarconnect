@@ -121,8 +121,8 @@ export default function ProgramDetail() {
             <div className="absolute inset-0 bg-gradient-to-b from-[rgba(13,45,63,0.05)] to-[rgba(13,45,63,0.5)]" />
 
             <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
-              {program.qsRankText && (
-                <div className="inline-flex items-center gap-[6px] backdrop-blur-md rounded-full py-[6px] px-[14px] text-[12px] font-bold border border-[rgba(255,255,255,0.3)] bg-[rgba(255,243,220,0.92)] text-[#b36200]">QS {program.qsRankText}</div>
+              {program.affiliation && (
+                <div className="inline-flex items-center gap-[6px] backdrop-blur-md rounded-full py-[6px] px-[14px] text-[12px] font-bold border border-[rgba(255,255,255,0.3)] bg-[rgba(255,243,220,0.92)] text-[#b36200]">Affiliated to {program.affiliation}</div>
               )}
               {program.country && (
                 <div className="inline-flex items-center gap-[6px] backdrop-blur-md rounded-full py-[6px] px-[14px] text-[12px] font-bold border border-[rgba(255,255,255,0.3)] bg-[rgba(255,255,255,0.92)] text-brand-dark">

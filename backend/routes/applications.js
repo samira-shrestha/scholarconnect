@@ -34,7 +34,7 @@ router.get("/student/list", auth, requireRole("student"), async (req, res) => {
   try {
     const rawApplications = await Application.find({ studentId: req.user.id })
       .sort({ createdAt: -1 })
-      .populate("programId", "title universityName country tuitionTotal scholarshipAmount bannerImageUrl universityLogoUrl qsRankText deadline gpaRequired description");
+      .populate("programId", "title universityName country tuitionTotal scholarshipAmount bannerImageUrl universityLogoUrl affiliation deadline gpaRequired description");
 
     // nice shape for frontend
     const applications = rawApplications.map((application) => ({
