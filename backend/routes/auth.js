@@ -1,7 +1,10 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+
 const User = require("../models/User");
+const sendEmail = require("../config/sendEmail");
 
 function signToken(user) {
   return jwt.sign(
@@ -10,6 +13,7 @@ function signToken(user) {
       role: user.role,
       name: user.name,
       isVerified: user.isVerified,
+      emailVerified: user.emailVerified,
     },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
@@ -19,7 +23,17 @@ function signToken(user) {
 // POST /api/auth/register
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, password, role, gpa, qualificationLevel, budget, preferredLocation, preferredCourse } = req.body;
+    const {
+      name,
+      email,
+      password,
+      role,
+      gpa,
+      qualificationLevel,
+      budget,
+      preferredLocation,
+      preferredCourse,
+    } = req.body;
 
     if (!name || !email || !password || !role) {
       return res.status(400).json({
@@ -40,24 +54,29 @@ router.post("/register", async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 10);
 
+    const emailVerificationToken = crypto.randomBytes(32).toString("hex");
+
     const userPayload = {
       name: String(name).trim(),
       email: normalizedEmail,
       password: hashed,
       role,
-      isVerified: role === "university" ? false : true,
+
+      // keep this for your existing university/admin approval logic
+      isVerified: true,
+
+      // new email verification field
+      emailVerified: role === "university" ? true : false,
+      emailVerificationToken: role === "university" ? undefined : emailVerificationToken,
+      emailVerificationTokenExpires: role === "university" ? undefined : Date.now() + 60 * 60 * 1000,
     };
 
     if (role === "student") {
-      if (gpa !== undefined && gpa !== "") {
-        userPayload.gpa = Number(gpa);
-      }
+      if (gpa !== undefined && gpa !== "") userPayload.gpa = Number(gpa);
       if (qualificationLevel !== undefined && qualificationLevel !== "") {
         userPayload.qualificationLevel = String(qualificationLevel).trim();
       }
-      if (budget !== undefined && budget !== "") {
-        userPayload.budget = Number(budget);
-      }
+      if (budget !== undefined && budget !== "") userPayload.budget = Number(budget);
       if (preferredLocation !== undefined && preferredLocation !== "") {
         userPayload.preferredLocation = String(preferredLocation).trim();
       }
@@ -68,21 +87,65 @@ router.post("/register", async (req, res) => {
 
     const user = await User.create(userPayload);
 
-    const token = signToken(user);
+    const clientOrigin = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+    const verificationLink = `${clientOrigin}/verify-email/${emailVerificationToken}`;
+
+    if (role === "student") {
+      await sendEmail({
+        to: user.email,
+        subject: "Verify your ScholarConnect email",
+        html: `
+          <h2>Welcome to ScholarConnect</h2>
+          <p>Hello ${user.name},</p>
+          <p>Please verify your email address to activate your account.</p>
+          <a href="${verificationLink}">Verify Email</a>
+           
+        `,
+      });
+    }
 
     res.status(201).json({
-      token,
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        isVerified: user.isVerified,
-      },
+      message: "Registration successful. Please check your email to verify your account.",
     });
   } catch (error) {
     console.log("Register error:", error);
-    res.status(500).json({ message: "Register failed" });
+    res.status(500).json({ message: "Register failed", error: error.message });
+  }
+});
+
+// GET /api/auth/verify-email/:token
+router.get("/verify-email/:token", async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    const user = await User.findOne({
+      emailVerificationToken: token,
+      emailVerificationTokenExpires: { $gt: new Date() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired verification link",
+      });
+    }
+
+    user.emailVerified = true;
+    user.emailVerificationToken = undefined;
+    user.emailVerificationTokenExpires = undefined;
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Email verified successfully. You can now login.",
+    });
+  } catch (error) {
+    console.log("Verify email error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Email verification failed",
+    });
   }
 });
 
@@ -109,6 +172,12 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    if (user.role === "student" && !user.emailVerified) {
+      return res.status(403).json({
+        message: "Please verify your email before logging in.",
+      });
+    }
+
     const token = signToken(user);
 
     res.json({
@@ -119,6 +188,7 @@ router.post("/login", async (req, res) => {
         email: user.email,
         role: user.role,
         isVerified: user.isVerified,
+        emailVerified: user.emailVerified,
       },
     });
   } catch (error) {

@@ -3,6 +3,7 @@ const Application = require("../models/Application");
 const Program = require("../models/Program");
 const User = require("../models/User");
 const { auth, requireRole } = require("../middleware/auth");
+const sendEmail = require("../config/sendEmail");
 
 //  POST /api/applications/:programId (student applies)
 router.post("/:programId", auth, requireRole("student"), async (req, res) => {
@@ -106,6 +107,22 @@ router.patch("/:id", auth, requireRole("university"), async (req, res) => {
 
     applicationDocument.status = status;
     await applicationDocument.save();
+
+    if (status === "accepted") {
+      const student = await User.findById(applicationDocument.studentId);
+      if (student && student.email) {
+        await sendEmail({
+          to: student.email,
+          subject: `Application Accepted: ${program.title}`,
+          html: `
+            <h2>Congratulations!</h2>
+            <p>Hello ${student.name},</p>
+            <p>We are thrilled to inform you that your application to <strong>${program.title}</strong> at <strong>${program.universityName}</strong> has been accepted!</p>
+            <p>Please log in to your ScholarConnect dashboard for more details and next steps.</p>
+          `,
+        });
+      }
+    }
 
     res.json({ application: applicationDocument });
   } catch (error) {

@@ -98,14 +98,11 @@ export default function Register({ role: propRole }) {
       }
 
       const response = await api.post("/auth/register", payload);
-      const { token, user } = response.data;
-
-      saveSession(token, user);
       setDone(true);
 
       setTimeout(() => {
-        nav(user.role === "student" ? "/student/dashboard" : "/university/dashboard");
-      }, 1400);
+        nav("/login");
+      }, 3000);
 
     } catch (e2) {
       setError(e2.response?.data?.message || e2.message || "Registration failed.");
@@ -193,7 +190,9 @@ export default function Register({ role: propRole }) {
               </div>
               <div className="reg-success-title">Account created!</div>
               <div className="reg-success-sub">
-                Welcome to ScholarConnect. Redirecting you to your dashboard…
+                {selectedRole === "university" 
+                  ? "Registration successful. Redirecting to login..."
+                  : "Please check your email to verify your account. Redirecting to login..."}
               </div>
             </div>
           )}
@@ -343,7 +342,13 @@ export default function Register({ role: propRole }) {
                           max="4.0"
                           placeholder="e.g. 3.8"
                           value={gpa}
-                          onChange={(e) => setGpa(e.target.value)}
+                          onChange={(e) => {
+                            const value = e.target.value;
+
+                            if (value === "" || (Number(value) >= 0 && Number(value) <= 4)) {
+                              setGpa(value);
+                            }
+                          }}
                           required
                         />
                       </div>

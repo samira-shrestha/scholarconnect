@@ -88,7 +88,13 @@ function ProgramCard({ p }) {
         {/* Affiliation row */}
         {p.affiliation && (
           <div className="flex items-center gap-[7px] text-[14px] font-extrabold text-[#d97706] mt-[2px]">
-            <div className="px-[6px] h-[22px] rounded-full bg-[#d97706] text-white text-[9px] font-black tracking-[0.3px] flex items-center justify-center shrink-0">Affiliated to</div>
+
+            {/* Circle with first letter */}
+            <div className="px-[6px] h-[22px] rounded-full bg-[#d97706] text-white text-[9px] font-black tracking-[0.3px] flex items-center justify-center shrink-0">
+              {p.affiliation.charAt(0).toUpperCase()}
+            </div>
+
+            {/* Full affiliation text */}
             {p.affiliation}
           </div>
         )}
@@ -177,10 +183,10 @@ export default function ProgramList() {
     })
     .sort((a, b) => {
       if (sortBy === "match") {
-         const mB = b.matchPercentage || 0;
-         const mA = a.matchPercentage || 0;
-         if (mB !== mA) return mB - mA;
-         return new Date(b.createdAt) - new Date(a.createdAt);
+        const mB = b.matchPercentage || 0;
+        const mA = a.matchPercentage || 0;
+        if (mB !== mA) return mB - mA;
+        return new Date(b.createdAt) - new Date(a.createdAt);
       }
       if (sortBy === "newest") return new Date(b.createdAt) - new Date(a.createdAt);
       if (sortBy === "deadline") return new Date(a.deadline || "9999") - new Date(b.deadline || "9999");

@@ -25,14 +25,22 @@ import UniversityApplications from "./pages/university/UniversityApplications.js
 // Admin
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 
+//Email Verify Page
+import VerifyEmail from "./pages/public/VerifyEmail.jsx"
+
 export default function App() {
   return (
     <Routes>
       {/* Public */}
       <Route path="/" element={<Landing />} />
 
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
       <Route path="/student/login" element={<Login role="student" />} />
       <Route path="/student/register" element={<Register role="student" />} />
+
+      <Route path="/verify-email/:token" element={<VerifyEmail />} />
 
       <Route path="/university/login" element={<Login role="university" />} />
       <Route path="/university/register" element={<Register role="university" />} />
@@ -86,6 +94,7 @@ export default function App() {
         }
       >
         <Route path="dashboard" element={<AdminDashboard />} />
+
       </Route>
     </Routes>
   );

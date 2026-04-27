@@ -161,26 +161,7 @@ export default function Login({ role: roleProp }) {
                   </div>
                 </div>
 
-                {/* Admin */}
-                <div
-                  className={`role-card admin ${selectedRole === "admin" ? "selected admin" : ""}`}
-                  onClick={() => setSelectedRole("admin")}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => e.key === "Enter" && setSelectedRole("admin")}
-                >
-                  <div className="role-icon-wrap">
-                    <Shield size={24} strokeWidth={1.8} />
-                  </div>
-                  <div className="role-body">
-                    <div className="role-title">I am an Admin</div>
-                    <div className="role-desc">Manage platforms, verify universities, oversee operations.</div>
-                  </div>
-                  <div className="role-check">
-                    <div className="role-check-inner" />
-                  </div>
                 </div>
-              </div>
 
               <button
                 className="login-continue-btn"
@@ -226,9 +207,11 @@ export default function Login({ role: roleProp }) {
                   </div>
                   <div className="login-selected-role-sub">Signing in as a {selectedRole}</div>
                 </div>
-                <button className="login-change-btn" onClick={() => { setStep(1); setErr(""); }}>
-                  Change
-                </button>
+                {selectedRole !== "admin" && (
+                  <button className="login-change-btn" onClick={() => { setStep(1); setErr(""); }}>
+                    Change
+                  </button>
+                )}
               </div>
 
               {err && (

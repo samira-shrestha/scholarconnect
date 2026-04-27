@@ -209,10 +209,10 @@ export default function Landing() {
         </div>
 
         <div className="sc-nav-right">
-          <Link className="sc-nav-link ghost" to="/student/login">
+          <Link className="sc-nav-link ghost" to="/login">
             <LogIn size={14} /> Login
           </Link>
-          <Link className="sc-nav-link filled" to="/student/register">
+          <Link className="sc-nav-link filled" to="/register">
             Get Started <ChevronRight size={14} />
           </Link>
         </div>
@@ -222,15 +222,13 @@ export default function Landing() {
         </button>
       </nav>
 
-      {/* Mobile menu */}
       {menuOpen && (
         <div className="sc-mobile-menu" onClick={() => setMenuOpen(false)}>
           <a className="sc-mobile-link" href="#why"><BookOpen size={16} /> Why Us</a>
           <a className="sc-mobile-link" href="#solutions"><Zap size={16} /> Solutions</a>
           <a className="sc-mobile-link" href="#testimonials"><Star size={16} /> Testimonials</a>
-          <Link className="sc-mobile-link" to="/student/login"><LogIn size={16} /> Student Login</Link>
-          <Link className="sc-mobile-link" to="/university/login"><Building2 size={16} /> University Login</Link>
-          <Link className="sc-mobile-link cta" to="/student/register"><UserPlus size={16} /> Get Started Free</Link>
+          <Link className="sc-mobile-link" to="/login"><LogIn size={16} /> Login</Link>
+          <Link className="sc-mobile-link cta" to="/register"><UserPlus size={16} /> Get Started Free</Link>
         </div>
       )}
 
