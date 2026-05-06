@@ -55,11 +55,11 @@ function ProgramCard({ p }) {
 
         {/* Large logo overlapping banner bottom-left */}
         <div className="absolute left-5 -bottom-7 w-20 h-20 rounded-[18px] bg-white border-2 border-brand-border flex items-center justify-center shadow-[0_8px_24px_rgba(13,45,63,0.13)] overflow-hidden z-[2] shrink-0">
-          {p.universityLogoUrl
-            ? <img src={p.universityLogoUrl} alt={p.universityName} className="w-full h-full object-cover"
+          {p.collegeLogoUrl
+            ? <img src={p.collegeLogoUrl} alt={p.collegeName} className="w-full h-full object-cover"
               onError={(e) => { e.currentTarget.style.display = "none"; }} />
             : <span className="text-[28px] font-black text-brand font-sans">
-              {(p.universityName || "U")[0].toUpperCase()}
+              {(p.collegeName || "U")[0].toUpperCase()}
             </span>
           }
         </div>
@@ -76,10 +76,10 @@ function ProgramCard({ p }) {
 
       {/* Body */}
       <div className="pt-[38px] px-5 pb-4 flex-1 flex flex-col gap-3">
-        {/* University name */}
+        {/* college name */}
         <div className="flex items-center gap-[6px] mb-[-3px]">
-          <div className="text-[18px] font-black text-[brand-dark] tracking-[-0.4px] leading-[1.2]">{p.universityName || "University"}</div>
-          {p.universityIsVerified && (
+          <div className="text-[18px] font-black text-[brand-dark] tracking-[-0.4px] leading-[1.2]">{p.collegeName || "college"}</div>
+          {p.collegeIsVerified && (
             <CheckCircle2 color="#3AA1C9" size={16} fill="#E8F4FA" strokeWidth={2.5} className="mt-[-2px] shrink-0" />
           )}
         </div>
@@ -166,8 +166,8 @@ export default function ProgramList() {
     })();
   }, []);
 
-  /* unique countries for filter */
-  const countries = [...new Set(programs.map((p) => p.country).filter(Boolean))].sort();
+  /* unique Locations for filter */
+  const Locations = [...new Set(programs.map((p) => p.country).filter(Boolean))].sort();
 
   /* filter + sort */
   const filtered = programs
@@ -176,8 +176,9 @@ export default function ProgramList() {
       const matchSearch =
         !q ||
         p.title.toLowerCase().includes(q) ||
-        (p.universityName || "").toLowerCase().includes(q) ||
+        (p.collegeName || "").toLowerCase().includes(q) ||
         (p.country || "").toLowerCase().includes(q);
+      (p.affiliation || "").toLowerCase().includes(q);
       const matchCountry = !countryFilter || p.country === countryFilter;
       return matchSearch && matchCountry;
     })
@@ -188,10 +189,16 @@ export default function ProgramList() {
         if (mB !== mA) return mB - mA;
         return new Date(b.createdAt) - new Date(a.createdAt);
       }
+
       if (sortBy === "newest") return new Date(b.createdAt) - new Date(a.createdAt);
       if (sortBy === "deadline") return new Date(a.deadline || "9999") - new Date(b.deadline || "9999");
       if (sortBy === "tuition_asc") return (a.tuitionTotal || 0) - (b.tuitionTotal || 0);
       if (sortBy === "tuition_desc") return (b.tuitionTotal || 0) - (a.tuitionTotal || 0);
+
+      if (sortBy === "affiliation") {
+        return (a.affiliation || "").localeCompare(b.affiliation || "");
+      }
+
       return 0;
     });
 
@@ -215,12 +222,12 @@ export default function ProgramList() {
             <span className="text-[20px] font-black text-brand-dark tracking-[-0.8px]">{programs.length}</span>
             <span className="text-[12px] text-brand-muted font-medium">Programs</span>
           </div>
-          {countries.length > 0 && (
+          {Locations.length > 0 && (
             <>
               <div className="w-[1px] h-[28px] bg-brand-border" />
               <div className="flex items-center gap-2">
-                <span className="text-[20px] font-black text-brand-dark tracking-[-0.8px]">{countries.length}</span>
-                <span className="text-[12px] text-brand-muted font-medium">Countries</span>
+                <span className="text-[20px] font-black text-brand-dark tracking-[-0.8px]">{Locations.length}</span>
+                <span className="text-[12px] text-brand-muted font-medium">Locations</span>
               </div>
             </>
           )}
@@ -250,7 +257,7 @@ export default function ProgramList() {
             <Search size={15} className="text-brand-muted shrink-0" />
             <input
               className="flex-1 border-none outline-none py-[11px] text-[13.5px] font-medium text-brand-text bg-transparent font-sans placeholder:text-[#b0c8d4] placeholder:font-normal"
-              placeholder="Search programs, universities, countries…"
+              placeholder="Search programs, college, Locations…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -263,22 +270,7 @@ export default function ProgramList() {
 
           <div className="flex gap-2 flex-wrap">
             {/* Country filter */}
-            {countries.length > 0 && (
-              <div className="flex items-center gap-[7px] bg-brand-card border-[1.5px] border-brand-border rounded-[10px] px-3 cursor-pointer transition-colors duration-[180ms] focus-within:border-brand hover:border-[rgba(58,161,201,0.4)]">
-                <Globe size={13} className="text-brand-muted shrink-0" />
-                <select
-                  className="border-none outline-none py-[9px] text-[13px] font-semibold text-brand-muted bg-transparent font-sans cursor-pointer appearance-none pr-1"
-                  value={countryFilter}
-                  onChange={(e) => setCountryFilter(e.target.value)}
-                >
-                  <option value="">All Countries</option>
-                  {countries.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-                <ChevronDown size={12} className="text-brand-muted shrink-0" />
-              </div>
-            )}
+
 
             {/* Sort */}
             <div className="flex items-center gap-[7px] bg-brand-card border-[1.5px] border-brand-border rounded-[10px] px-3 cursor-pointer transition-colors duration-[180ms] focus-within:border-brand hover:border-[rgba(58,161,201,0.4)]">
@@ -293,6 +285,7 @@ export default function ProgramList() {
                 <option value="deadline">By Deadline</option>
                 <option value="tuition_asc">Tuition: Low → High</option>
                 <option value="tuition_desc">Tuition: High → Low</option>
+                <option value="affiliation">Affiliation: A → Z</option>
               </select>
               <ChevronDown size={12} className="text-brand-muted shrink-0" />
             </div>
@@ -322,7 +315,7 @@ export default function ProgramList() {
           <div className="text-[14px] text-brand-muted max-w-[320px] mx-auto leading-[1.65]">
             {search || countryFilter
               ? "Try adjusting your search or filters."
-              : "Check back soon — universities are adding new programs regularly."}
+              : "Check back soon — college are adding new programs regularly."}
           </div>
         </div>
       ) : (

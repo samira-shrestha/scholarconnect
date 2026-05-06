@@ -133,11 +133,11 @@ export default function ProgramDetail() {
 
             {/* Logo */}
             <div className="absolute left-6 -bottom-[26px] w-16 h-16 rounded-[18px] bg-white border-[2.5px] border-brand-border flex items-center justify-center shadow-[0_8px_24px_rgba(13,45,63,0.14)] overflow-hidden z-[2]">
-              {program.universityLogoUrl
-                ? <img src={program.universityLogoUrl} alt={program.universityName}
+              {program.collegeLogoUrl
+                ? <img src={program.collegeLogoUrl} alt={program.collegeName}
                   onError={(e) => { e.currentTarget.style.display = "none"; }} />
                 : <span className="text-[22px] font-black text-brand font-sans">
-                  {(program.universityName || "U")[0].toUpperCase()}
+                  {(program.collegeName || "U")[0].toUpperCase()}
                 </span>
               }
             </div>
@@ -146,8 +146,8 @@ export default function ProgramDetail() {
           {/* Body */}
           <div className="pt-11 px-7 pb-7">
             <div className="flex items-center gap-[8px] mb-1.5">
-              <div className="text-[24px] font-black text-brand-dark tracking-[-0.6px]">{program.universityName || "University"}</div>
-              {program.universityIsVerified && (
+              <div className="text-[24px] font-black text-brand-dark tracking-[-0.6px]">{program.collegeName || "college"}</div>
+              {program.collegeIsVerified && (
                 <CheckCircle2 color="#3AA1C9" size={22} fill="#E8F4FA" strokeWidth={2.5} className="shrink-0" />
               )}
             </div>
@@ -278,15 +278,15 @@ export default function ProgramDetail() {
             </div>
           </div>
 
-          {/* University info card */}
+          {/* college info card */}
           <div className="bg-brand-card rounded-[16px] border-[1.5px] border-brand-border shadow-[0_2px_16px_rgba(13,45,63,0.07)] py-5 px-[22px]">
-            <div className="text-[11px] font-bold tracking-[1.5px] uppercase text-brand-muted mb-3.5">University Info</div>
+            <div className="text-[11px] font-bold tracking-[1.5px] uppercase text-brand-muted mb-3.5">college Info</div>
             <div className="flex items-center gap-[10px] py-2.5 border-b border-brand-border text-[13.5px] last:border-none last:pb-0">
               <Building2 size={15} className="text-brand shrink-0" strokeWidth={1.8} />
               <span className="text-brand-muted font-medium flex-1">Institution</span>
               <div className="flex items-center gap-1.5 font-bold text-brand-dark text-right justify-end">
-                <span>{program.universityName || "—"}</span>
-                {program.universityIsVerified && (
+                <span>{program.collegeName || "—"}</span>
+                {program.collegeIsVerified && (
                   <CheckCircle2 color="#3AA1C9" size={14} fill="#E8F4FA" strokeWidth={2.5} className="shrink-0" />
                 )}
               </div>
@@ -299,7 +299,7 @@ export default function ProgramDetail() {
             {program.country && (
               <div className="flex items-center gap-[10px] py-2.5 border-b border-brand-border text-[13.5px] last:border-none last:pb-0">
                 <MapPin size={15} className="text-brand shrink-0" strokeWidth={1.8} />
-                <span className="text-brand-muted font-medium flex-1">Location</span>
+                <span className="text-brand-muted font-medium flex-1">Locations</span>
                 <span className="font-bold text-brand-dark text-right">{program.country}</span>
               </div>
             )}

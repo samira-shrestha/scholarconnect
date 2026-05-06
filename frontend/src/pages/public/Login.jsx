@@ -8,7 +8,7 @@ import { useAuth } from "../../context/AuthContext.jsx";
 
 const FEATURES = [
   { label: "Browse 2,400+ verified programs" },
-  { label: "Apply to universities in minutes" },
+  { label: "Apply to College in minutes" },
   { label: "Track all applications in one place" },
 ];
 
@@ -44,7 +44,7 @@ export default function Login({ role: roleProp }) {
       }
       saveSession(token, user);
       if (user.role === "admin") nav("/admin/dashboard");
-      else if (user.role === "university") nav("/university/dashboard");
+      else if (user.role === "college") nav("/college/dashboard");
       else nav("/student/dashboard");
     } catch (e2) {
       setErr(e2.response?.data?.message || "Login failed. Please check your credentials.");
@@ -74,7 +74,7 @@ export default function Login({ role: roleProp }) {
             Your next chapter<br />starts <span>right here.</span>
           </h2>
           <p className="login-left-desc">
-            Thousands of students and universities trust ScholarConnect to make
+            Thousands of students and college trust ScholarConnect to make
             the application journey clear, fast, and stress-free.
           </p>
           <div className="login-features">
@@ -134,26 +134,26 @@ export default function Login({ role: roleProp }) {
                   </div>
                   <div className="role-body">
                     <div className="role-title">I am a Student</div>
-                    <div className="role-desc">Browse programs, apply to universities, track your applications.</div>
+                    <div className="role-desc">Browse programs, apply to college, track your applications.</div>
                   </div>
                   <div className="role-check">
                     <div className="role-check-inner" />
                   </div>
                 </div>
 
-                {/* University */}
+                {/* college */}
                 <div
-                  className={`role-card univ ${selectedRole === "university" ? "selected univ" : ""}`}
-                  onClick={() => setSelectedRole("university")}
+                  className={`role-card univ ${selectedRole === "college" ? "selected univ" : ""}`}
+                  onClick={() => setSelectedRole("college")}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => e.key === "Enter" && setSelectedRole("university")}
+                  onKeyDown={(e) => e.key === "Enter" && setSelectedRole("college")}
                 >
                   <div className="role-icon-wrap">
                     <Building2 size={24} strokeWidth={1.8} />
                   </div>
                   <div className="role-body">
-                    <div className="role-title">I am a University</div>
+                    <div className="role-title">I am a College</div>
                     <div className="role-desc">Manage programs, review applications, discover top candidates.</div>
                   </div>
                   <div className="role-check">
@@ -161,7 +161,7 @@ export default function Login({ role: roleProp }) {
                   </div>
                 </div>
 
-                </div>
+              </div>
 
               <button
                 className="login-continue-btn"
@@ -174,7 +174,7 @@ export default function Login({ role: roleProp }) {
               <div style={{ marginTop: 24, textAlign: "center" }}>
                 <div className="login-register">
                   Don't have an account?{" "}
-                  <Link to={selectedRole === "university" ? "/university/register" : "/student/register"}>
+                  <Link to={selectedRole === "college" ? "/college/register" : "/student/register"}>
                     Register for free
                   </Link>
                 </div>
@@ -193,7 +193,7 @@ export default function Login({ role: roleProp }) {
 
               {/* Selected role chip */}
               <div className="login-selected-role">
-                <div className={`login-selected-role-icon ${selectedRole === "university" ? "univ" : selectedRole === "admin" ? "admin" : "student"}`}>
+                <div className={`login-selected-role-icon ${selectedRole === "college" ? "univ" : selectedRole === "admin" ? "admin" : "student"}`}>
                   {selectedRole === "student"
                     ? <GraduationCap size={17} strokeWidth={2} />
                     : selectedRole === "admin"
@@ -203,7 +203,7 @@ export default function Login({ role: roleProp }) {
                 </div>
                 <div>
                   <div className="login-selected-role-label">
-                    {selectedRole === "student" ? "Student Account" : selectedRole === "admin" ? "Admin Account" : "University Account"}
+                    {selectedRole === "student" ? "Student Account" : selectedRole === "admin" ? "Admin Account" : "College Account"}
                   </div>
                   <div className="login-selected-role-sub">Signing in as a {selectedRole}</div>
                 </div>
@@ -299,7 +299,7 @@ export default function Login({ role: roleProp }) {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className={`login-submit ${selectedRole === "university" ? "univ-btn" : "student-btn"
+                  className={`login-submit ${selectedRole === "college" ? "univ-btn" : "student-btn"
                     }`}
                   disabled={loading}
                 >
@@ -348,7 +348,7 @@ export default function Login({ role: roleProp }) {
               </div>
               <div style={{ marginTop: 16 }} />
               <div className="login-register">
-                <Link to={selectedRole === "university" ? "/university/register" : "/student/register"}>
+                <Link to={selectedRole === "college" ? "/college/register" : "/student/register"}>
                   Create a free {selectedRole} account →
                 </Link>
               </div>

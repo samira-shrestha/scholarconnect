@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import api from "../../api/axios";
 
-export default function UniversityApplications() {
+export default function CollegeApplications() {
   const [apps, setApps] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -13,7 +13,7 @@ export default function UniversityApplications() {
     setError("");
     setLoading(true);
     try {
-      const response = await api.get("/applications/university/list");
+      const response = await api.get("/applications/college/list");
       const list = response.data.applications || response.data || [];
       setApps(Array.isArray(list) ? list : []);
     } catch (e) {
@@ -67,7 +67,7 @@ export default function UniversityApplications() {
     <div className="font-sans bg-brand-bg min-h-screen py-8 px-9 text-brand-text max-md:py-4 max-md:px-3.5 antialiased">
       <div className="flex justify-between gap-3 flex-wrap mb-5">
         <div>
-          <h2 className="mt-0 mb-1.5 text-[26px] font-black text-brand-dark tracking-[-0.8px]">University Applications</h2>
+          <h2 className="mt-0 mb-1.5 text-[26px] font-black text-brand-dark tracking-[-0.8px]">college Applications</h2>
           <div className="opacity-70 text-[14px] font-medium text-brand-muted">
             Review students who applied to your programs.
           </div>
@@ -115,7 +115,7 @@ export default function UniversityApplications() {
                 <div>
                   <div className="font-black text-[15.5px] text-brand-dark tracking-[-0.3px] leading-[1.3]">{a.program?.title || "Program"}</div>
                   <div className="text-[13px] opacity-70 font-semibold text-brand-muted mt-[3px]">
-                    University: {a.program?.universityName || "—"}
+                    college: {a.program?.collegeName || "—"}
                   </div>
                 </div>
 

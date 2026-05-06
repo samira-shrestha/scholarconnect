@@ -17,10 +17,10 @@ import ProgramList from "./pages/student/ProgramList.jsx";
 import ProgramDetail from "./pages/student/ProgramDetail.jsx";
 import MyApplications from "./pages/student/MyApplications.jsx";
 
-// University
-import UniversityDashboard from "./pages/university/UniversityDashboard.jsx";
-import ManagePrograms from "./pages/university/ManagePrograms.jsx";
-import UniversityApplications from "./pages/university/UniversityApplications.jsx";
+// college
+import ManagePrograms from "./pages/college/ManagePrograms.jsx";
+import CollegeApplications from "./pages/college/CollegeApplications.jsx";
+import CollegeDashboard from "./pages/college/CollegeDashboard.jsx";
 
 // Admin
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
@@ -42,8 +42,8 @@ export default function App() {
 
       <Route path="/verify-email/:token" element={<VerifyEmail />} />
 
-      <Route path="/university/login" element={<Login role="university" />} />
-      <Route path="/university/register" element={<Register role="university" />} />
+      <Route path="/college/login" element={<Login role="college" />} />
+      <Route path="/college/register" element={<Register role="college" />} />
 
       {/* NEW ADMIN ROUTES */}
       <Route path="/admin/login" element={<Login role="admin" />} />
@@ -66,20 +66,20 @@ export default function App() {
         <Route path="applications" element={<MyApplications />} />
       </Route>
 
-      {/* University Portal */}
+      {/* college Portal */}
       <Route
-        path="/university"
+        path="/college"
         element={
           <PrivateRoute>
-            <RoleRoute role="university">
+            <RoleRoute role="college">
               <PortalLayout />
             </RoleRoute>
           </PrivateRoute>
         }
       >
-        <Route path="dashboard" element={<UniversityDashboard />} />
+        <Route path="dashboard" element={<CollegeDashboard />} />
         <Route path="programs" element={<ManagePrograms />} />
-        <Route path="applications" element={<UniversityApplications />} />
+        <Route path="applications" element={<CollegeApplications />} />
       </Route>
 
       {/* ADMIN PORTAL */}

@@ -3,15 +3,15 @@ const Program = require("../models/Program");
 const Application = require("../models/Application");
 const { auth, requireRole } = require("../middleware/auth");
 
-router.get("/", auth, requireRole("university"), async (req, res) => {
+router.get("/", auth, requireRole("college"), async (req, res) => {
     try {
-        const universityId = req.user.id;
+        const collegeId = req.user.id;
 
-        // Count total programs of this university
-        const totalPrograms = await Program.countDocuments({ universityId });
+        // Count total programs of this college
+        const totalPrograms = await Program.countDocuments({ collegeId });
 
-        // Get all program ids of this university
-        const programs = await Program.find({ universityId }).select("_id");
+        // Get all program ids of this college
+        const programs = await Program.find({ collegeId }).select("_id");
         const programIds = programs.map((p) => p._id);
 
         // Count applications for those programs
@@ -36,7 +36,7 @@ router.get("/", auth, requireRole("university"), async (req, res) => {
             pending,
         });
     } catch (error) {
-        console.log("University dashboard error:", error);
+        console.log("college dashboard error:", error);
         res.status(500).json({ message: "Failed to fetch dashboard data" });
     }
 });

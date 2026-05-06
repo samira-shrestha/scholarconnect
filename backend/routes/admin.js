@@ -2,35 +2,35 @@ const router = require("express").Router();
 const User = require("../models/User");
 const { auth, requireRole } = require("../middleware/auth");
 
-// GET /api/admin/universities
-router.get("/universities", auth, requireRole("admin"), async (req, res) => {
+// GET /api/admin/college
+router.get("/college", auth, requireRole("admin"), async (req, res) => {
     try {
-        const universities = await User.find({ role: "university" }).sort({ createdAt: -1 });
-        res.json(universities);
+        const college = await User.find({ role: "college" }).sort({ createdAt: -1 });
+        res.json(college);
     } catch (error) {
-        console.log("Fetch universities error:", error);
-        res.status(500).json({ message: "Failed to fetch universities" });
+        console.log("Fetch college error:", error);
+        res.status(500).json({ message: "Failed to fetch college" });
     }
 });
 
-// PATCH /api/admin/universities/:id/verify
-router.patch("/universities/:id/verify", auth, requireRole("admin"), async (req, res) => {
+// PATCH /api/admin/college/:id/verify
+router.patch("/college/:id/verify", auth, requireRole("admin"), async (req, res) => {
     try {
-        const university = await User.findOne({
+        const college = await User.findOne({
             _id: req.params.id,
-            role: "university",
+            role: "college",
         });
 
-        if (!university) {
-            return res.status(404).json({ message: "University not found" });
+        if (!college) {
+            return res.status(404).json({ message: "college not found" });
         }
 
-        university.isVerified = !university.isVerified;
-        await university.save();
+        college.isVerified = !college.isVerified;
+        await college.save();
 
         res.json({
-            message: `University ${university.isVerified ? "verified" : "unverified"} successfully`,
-            university,
+            message: `college ${college.isVerified ? "verified" : "unverified"} successfully`,
+            college,
         });
     } catch (error) {
         console.log("Toggle verification error:", error);
@@ -38,22 +38,22 @@ router.patch("/universities/:id/verify", auth, requireRole("admin"), async (req,
     }
 });
 
-// DELETE /api/admin/universities/:id
-router.delete("/universities/:id", auth, requireRole("admin"), async (req, res) => {
+// DELETE /api/admin/college/:id
+router.delete("/college/:id", auth, requireRole("admin"), async (req, res) => {
     try {
-        const university = await User.findOneAndDelete({
+        const college = await User.findOneAndDelete({
             _id: req.params.id,
-            role: "university",
+            role: "college",
         });
 
-        if (!university) {
-            return res.status(404).json({ message: "University not found" });
+        if (!college) {
+            return res.status(404).json({ message: "college not found" });
         }
 
-        res.json({ message: "University deleted successfully" });
+        res.json({ message: "college deleted successfully" });
     } catch (error) {
-        console.log("Delete university error:", error);
-        res.status(500).json({ message: "Failed to delete university" });
+        console.log("Delete college error:", error);
+        res.status(500).json({ message: "Failed to delete college" });
     }
 });
 

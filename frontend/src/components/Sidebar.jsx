@@ -31,13 +31,13 @@ const STUDENT_MENU = [
 
 ];
 
-const UNIVERSITY_MENU = [
+const college_MENU = [
   {
     section: "Main",
     items: [
-      { label: "Dashboard", to: "/university/dashboard", Icon: LayoutDashboard },
-      { label: "Manage Programs", to: "/university/programs", Icon: BookOpen },
-      { label: "Applications", to: "/university/applications", Icon: FileText },
+      { label: "Dashboard", to: "/college/dashboard", Icon: LayoutDashboard },
+      { label: "Manage Programs", to: "/college/programs", Icon: BookOpen },
+      { label: "Applications", to: "/college/applications", Icon: FileText },
     ],
   },
 
@@ -52,7 +52,7 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [openSections, setOpenSections] = useState({ Main: true, Account: true });
 
-  const menu = user?.role === "student" ? STUDENT_MENU : UNIVERSITY_MENU;
+  const menu = user?.role === "student" ? STUDENT_MENU : college_MENU;
 
   const initials = user?.name
     ? user.name.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase()
@@ -78,7 +78,7 @@ export default function Sidebar() {
       <div className="flex items-center justify-between pb-4 pt-[18px] px-4 border-b border-[#e8f0f4] shrink-0 min-h-[64px]">
         <Link className="flex items-center gap-2.5 no-underline overflow-hidden flex-1 min-w-0" to="/">
           <div className="w-[34px] h-[34px] rounded-[10px] shrink-0 bg-[#EAF6FB] flex items-center justify-center shadow-[0_2px_10px_rgba(58,161,201,0.3)]">
-            {user?.role?.trim()?.toLowerCase() === "university" ? (
+            {user?.role?.trim()?.toLowerCase() === "college" ? (
               <Building2 size={22} color="#3AA1C9" strokeWidth={2.2} />
             ) : (
               <GraduationCap size={22} color="#3AA1C9" strokeWidth={2.2} />
@@ -88,7 +88,7 @@ export default function Sidebar() {
             <div className="overflow-hidden whitespace-nowrap">
               <div className="text-[14px] font-bold text-brand-dark tracking-[-0.4px] leading-[1.15]">ScholarConnect</div>
               <div className="text-[10px] font-semibold text-[#7a9aaa] tracking-[0.4px] uppercase mt-[1px]">
-                {user?.role === "university" ? "University Portal" : "Student Portal"}
+                {user?.role === "college" ? "college Portal" : "Student Portal"}
               </div>
             </div>
           )}

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 
 export default function StudentDashboard() {
+  const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState({
     applications: 0,
     accepted: 0,
@@ -44,10 +46,10 @@ export default function StudentDashboard() {
   ];
 
   const actions = [
-    "Start New Application",
-    "Schedule Interview",
-    "Upload Documents",
-    "Contact Support"
+    { label: "Start New Application", onClick: () => navigate("/student/programs") },
+    { label: "Schedule Interview", onClick: () => alert("Interview scheduling coming soon!") },
+    { label: "Upload Documents", onClick: () => navigate("/student/applications") },
+    { label: "Contact Support", onClick: () => alert("Support feature coming soon!") }
   ];
 
   return (
@@ -115,8 +117,8 @@ export default function StudentDashboard() {
         <h3 className="actions-title">Quick Actions</h3>
         <div className="actions-grid">
           {actions.map((action, i) => (
-            <button key={i} className="action-btn" type="button">
-              {action}
+            <button key={i} className="action-btn" type="button" onClick={action.onClick}>
+              {action.label}
             </button>
           ))}
         </div>

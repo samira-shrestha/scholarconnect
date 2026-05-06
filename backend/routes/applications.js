@@ -35,7 +35,7 @@ router.get("/student/list", auth, requireRole("student"), async (req, res) => {
   try {
     const rawApplications = await Application.find({ studentId: req.user.id })
       .sort({ createdAt: -1 })
-      .populate("programId", "title universityName country tuitionTotal scholarshipAmount bannerImageUrl universityLogoUrl affiliation deadline gpaRequired description");
+      .populate("programId", "title collegeName country tuitionTotal scholarshipAmount bannerImageUrl collegeLogoUrl affiliation deadline gpaRequired description");
 
     // nice shape for frontend
     const applications = rawApplications.map((application) => ({
@@ -53,16 +53,16 @@ router.get("/student/list", auth, requireRole("student"), async (req, res) => {
   }
 });
 
-//  GET /api/applications/university/list (university: applications to my programs)
-router.get("/university/list", auth, requireRole("university"), async (req, res) => {
+//  GET /api/applications/college/list (college: applications to my programs)
+router.get("/college/list", auth, requireRole("college"), async (req, res) => {
   try {
-    const programs = await Program.find({ universityId: req.user.id }).select("_id title");
+    const programs = await Program.find({ collegeId: req.user.id }).select("_id title");
     const programIds = programs.map((p) => p._id);
 
     const rawApplications = await Application.find({ programId: { $in: programIds } })
       .sort({ createdAt: -1 })
       .populate("studentId", "name email gpa qualificationLevel")
-      .populate("programId", "title universityName");
+      .populate("programId", "title collegeName");
 
     const applications = rawApplications.map((application) => ({
       _id: application._id,
@@ -78,18 +78,18 @@ router.get("/university/list", auth, requireRole("university"), async (req, res)
       program: {
         _id: application.programId?._id,
         title: application.programId?.title,
-        universityName: application.programId?.universityName,
+        collegeName: application.programId?.collegeName,
       },
     }));
 
     res.json({ applications });
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch university applications" });
+    res.status(500).json({ message: "Failed to fetch college applications" });
   }
 });
 
-//  PATCH /api/applications/:id (university updates status)
-router.patch("/:id", auth, requireRole("university"), async (req, res) => {
+//  PATCH /api/applications/:id (college updates status)
+router.patch("/:id", auth, requireRole("college"), async (req, res) => {
   try {
     const { status } = req.body;
     if (!["accepted", "rejected", "pending"].includes(status))
@@ -98,11 +98,11 @@ router.patch("/:id", auth, requireRole("university"), async (req, res) => {
     const applicationDocument = await Application.findById(req.params.id);
     if (!applicationDocument) return res.status(404).json({ message: "Application not found" });
 
-    // owner check: application must be for a program belonging to this university
+    // owner check: application must be for a program belonging to this college
     const program = await Program.findById(applicationDocument.programId);
     if (!program) return res.status(404).json({ message: "Program not found" });
 
-    if (String(program.universityId) !== String(req.user.id))
+    if (String(program.collegeId) !== String(req.user.id))
       return res.status(403).json({ message: "Not your application" });
 
     applicationDocument.status = status;
@@ -117,8 +117,8 @@ router.patch("/:id", auth, requireRole("university"), async (req, res) => {
           html: `
             <h2>Congratulations!</h2>
             <p>Hello ${student.name},</p>
-            <p>We are thrilled to inform you that your application to <strong>${program.title}</strong> at <strong>${program.universityName}</strong> has been accepted!</p>
-            <p>Please log in to your ScholarConnect dashboard for more details and next steps.</p>
+            <p>We are thrilled to inform you that your application to <strong>${program.title}</strong> at <strong>${program.collegeName}</strong> has been accepted!</p>
+            <p>Please visit the institution more details and next steps.</p>
           `,
         });
       }

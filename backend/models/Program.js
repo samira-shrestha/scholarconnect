@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const programSchema = new mongoose.Schema(
   {
-    universityId: {
+    collegeId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -10,10 +10,10 @@ const programSchema = new mongoose.Schema(
     },
 
     //  display on student card
-    universityName: { type: String, required: true, trim: true },
+    collegeName: { type: String, required: true, trim: true },
 
     //  images for card
-    universityLogoUrl: { type: String, default: "" },   // small logo
+    collegeLogoUrl: { type: String, default: "" },   // small logo
     bannerImageUrl: { type: String, default: "" },      // big banner
 
     //  offer title / label

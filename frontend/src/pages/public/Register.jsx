@@ -23,7 +23,7 @@ function getStrength(pw) {
 }
 
 const LEFT_STEPS = [
-  { label: "Choose Account Type", sub: "Student or University" },
+  { label: "Choose Account Type", sub: "Student or college" },
   { label: "Create Your Account", sub: "Name, email & password" },
 ];
 
@@ -39,7 +39,7 @@ export default function Register({ role: propRole }) {
   const [gpa, setGpa] = useState("");
   const [qualificationLevel, setQualificationLevel] = useState("");
   const [budget, setBudget] = useState("");
-  const [preferredLocation, setPreferredLocation] = useState("");
+  const [preferredLocations, setPreferredLocations] = useState("");
   const [preferredCourse, setPreferredCourse] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [agreed, setAgreed] = useState(false);
@@ -93,7 +93,7 @@ export default function Register({ role: propRole }) {
         payload.gpa = gpa ? parseFloat(gpa) : undefined;
         payload.qualificationLevel = qualificationLevel;
         payload.budget = budget ? parseInt(budget, 10) : undefined;
-        payload.preferredLocation = preferredLocation;
+        payload.preferredLocations = preferredLocations;
         payload.preferredCourse = preferredCourse;
       }
 
@@ -138,7 +138,7 @@ export default function Register({ role: propRole }) {
           </h2>
           <p className="reg-left-desc">
             Creating an account takes less than two minutes. Join thousands of students
-            and universities already on the platform.
+            and college already on the platform.
           </p>
 
           <div className="reg-steps-preview">
@@ -190,7 +190,7 @@ export default function Register({ role: propRole }) {
               </div>
               <div className="reg-success-title">Account created!</div>
               <div className="reg-success-sub">
-                {selectedRole === "university" 
+                {selectedRole === "college"
                   ? "Registration successful. Redirecting to login..."
                   : "Please check your email to verify your account. Redirecting to login..."}
               </div>
@@ -216,20 +216,20 @@ export default function Register({ role: propRole }) {
                   <div className="reg-role-icon"><GraduationCap size={24} strokeWidth={1.8} /></div>
                   <div className="reg-role-body">
                     <div className="reg-role-title">I am a Student</div>
-                    <div className="reg-role-desc">Browse programs, apply to universities, and track your journey.</div>
+                    <div className="reg-role-desc">Browse programs, apply to college, and track your journey.</div>
                   </div>
                   <div className="reg-role-check"><div className="reg-role-check-dot" /></div>
                 </div>
 
                 <div
-                  className={`reg-role-card univ ${selectedRole === "university" ? "selected univ" : ""}`}
-                  onClick={() => setSelectedRole("university")}
+                  className={`reg-role-card univ ${selectedRole === "college" ? "selected univ" : ""}`}
+                  onClick={() => setSelectedRole("college")}
                   role="button" tabIndex={0}
-                  onKeyDown={(e) => e.key === "Enter" && setSelectedRole("university")}
+                  onKeyDown={(e) => e.key === "Enter" && setSelectedRole("college")}
                 >
                   <div className="reg-role-icon"><Building2 size={24} strokeWidth={1.8} /></div>
                   <div className="reg-role-body">
-                    <div className="reg-role-title">I am a University</div>
+                    <div className="reg-role-title">I am a College</div>
                     <div className="reg-role-desc">List programs, manage applications, and recruit top talent.</div>
                   </div>
                   <div className="reg-role-check"><div className="reg-role-check-dot" /></div>
@@ -247,7 +247,7 @@ export default function Register({ role: propRole }) {
               <div style={{ marginTop: 24 }} />
               <div className="reg-login-link">
                 Already have an account?{" "}
-                <Link to={selectedRole === "university" ? "/university/login" : "/student/login"}>
+                <Link to={selectedRole === "college" ? "/college/login" : "/student/login"}>
                   Sign in
                 </Link>
               </div>
@@ -265,14 +265,14 @@ export default function Register({ role: propRole }) {
 
               {/* Selected role chip */}
               <div className="reg-selected-chip">
-                <div className={`reg-chip-icon ${selectedRole === "university" ? "univ" : "student"}`}>
+                <div className={`reg-chip-icon ${selectedRole === "college" ? "univ" : "student"}`}>
                   {selectedRole === "student"
                     ? <GraduationCap size={17} strokeWidth={2} />
                     : <Building2 size={17} strokeWidth={2} />}
                 </div>
                 <div>
                   <div className="reg-chip-label">
-                    {selectedRole === "student" ? "Student Account" : "University Account"}
+                    {selectedRole === "student" ? "Student Account" : "college Account"}
                   </div>
                   <div className="reg-chip-sub">Registering as a {selectedRole}</div>
                 </div>
@@ -294,14 +294,14 @@ export default function Register({ role: propRole }) {
                 {/* Name */}
                 <div className="reg-field">
                   <label className="reg-label">
-                    {selectedRole === "university" ? "University / Institution Name" : "Full Name"}
+                    {selectedRole === "college" ? "college / Institution Name" : "Full Name"}
                   </label>
                   <div className="reg-input-wrap">
                     <User size={16} className="reg-input-icon" />
                     <input
                       className="reg-input"
                       type="text"
-                      placeholder={selectedRole === "university" ? "e.g. KMC College" : "e.g. Jeevan Shrestha"}
+                      placeholder={selectedRole === "college" ? "e.g. KMC College" : "e.g. Jeevan Shrestha"}
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
@@ -372,14 +372,14 @@ export default function Register({ role: propRole }) {
                       </div>
                     </div>
                     <div className="reg-field">
-                      <label className="reg-label">Preferred Study Location</label>
+                      <label className="reg-label">Preferred Study Locations</label>
                       <div className="reg-input-wrap">
                         <select
                           className="reg-input"
-                          value={preferredLocation}
-                          onChange={(e) => setPreferredLocation(e.target.value)}
+                          value={preferredLocations}
+                          onChange={(e) => setPreferredLocations(e.target.value)}
                         >
-                          <option value="" disabled>Select preferred location</option>
+                          <option value="" disabled>Select preferred Locations</option>
                           <option value="Kathmandu">Kathmandu</option>
                           <option value="Lalitpur">Lalitpur</option>
                           <option value="Bhaktapur">Bhaktapur</option>
@@ -482,7 +482,7 @@ export default function Register({ role: propRole }) {
 
                 <button
                   type="submit"
-                  className={`reg-btn ${selectedRole === "university" ? "success" : "primary"}`}
+                  className={`reg-btn ${selectedRole === "college" ? "success" : "primary"}`}
                   disabled={loading || !agreed}
                 >
                   {loading ? (
@@ -507,7 +507,7 @@ export default function Register({ role: propRole }) {
               </div>
               <div style={{ marginTop: 16 }} />
               <div className="reg-login-link">
-                <Link to={selectedRole === "university" ? "/university/login" : "/student/login"}>
+                <Link to={selectedRole === "college" ? "/college/login" : "/student/login"}>
                   Sign in to your {selectedRole} account →
                 </Link>
               </div>

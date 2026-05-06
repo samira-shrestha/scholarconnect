@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 
-export default function UniversityDashboard() {
+export default function CollegeDashboard() {
   const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState({
     totalPrograms: 0,
@@ -15,7 +15,7 @@ export default function UniversityDashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const res = await api.get("/university/dashboard");
+        const res = await api.get("/college/dashboard");
         setDashboardData(res.data);
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
@@ -35,16 +35,16 @@ export default function UniversityDashboard() {
   ];
 
   const actions = [
-    { label: "Create New Program", icon: "+", path: "/university/programs" },
-    { label: "Review Applications", icon: "📋", path: "/university/applications" },
-    { label: "Generate Reports", icon: "📊", path: "/university/dashboard" },
-    { label: "Manage Scholarships", icon: "💰", path: "/university/programs" }
+    { label: "Create New Program", icon: "+", path: "/college/programs" },
+    { label: "Review Applications", icon: "📋", path: "/college/applications" },
+    { label: "Generate Reports", icon: "📊", path: "/college/dashboard" },
+    { label: "Manage Scholarships", icon: "💰", path: "/college/programs" }
   ];
 
   return (
     <div className="uni-dash">
       <div className="uni-header">
-        <h2 className="uni-title">University Dashboard</h2>
+        <h2 className="uni-title">College Dashboard</h2>
         <p className="uni-subtitle">Manage your programs and track application metrics</p>
       </div>
 

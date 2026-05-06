@@ -7,11 +7,6 @@ import {
   Loader2, MapPin, IndianRupee, Edit, Info
 } from "lucide-react";
 
-/* ─────────────────────────────────────────────
-   CSS
-───────────────────────────────────────────── */
-
-
 /* ─── helpers ─── */
 const money = (n) => Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 0 });
 const calcLeft = (t, s) => Math.max(Number(t || 0) - Number(s || 0), 0);
@@ -54,7 +49,7 @@ const fmtDate = (d) => {
 const EMPTY = {
   title: "", country: "", tuitionTotal: "", scholarshipPercentage: "",
   scholarshipType: "Merit-based", eligibilityCriteria: "", scholarshipAmount: "",
-  deadline: "", affiliation: "", universityLogoUrl: "", bannerImageUrl: "", description: "",
+  deadline: "", affiliation: "", collegeLogoUrl: "", bannerImageUrl: "", description: "",
 };
 
 export default function ManagePrograms() {
@@ -97,7 +92,7 @@ export default function ManagePrograms() {
       scholarshipAmount: prog.scholarshipAmount || "",
       deadline: prog.deadline ? new Date(prog.deadline).toISOString().split('T')[0] : "",
       affiliation: prog.affiliation || "",
-      universityLogoUrl: prog.universityLogoUrl || "",
+      collegeLogoUrl: prog.collegeLogoUrl || "",
       bannerImageUrl: prog.bannerImageUrl || "",
       description: prog.description || "",
     });
@@ -132,7 +127,7 @@ export default function ManagePrograms() {
         scholarshipAmount: expectedScholarshipAmount,
         deadline: form.deadline || null,
         affiliation: form.affiliation.trim(),
-        universityLogoUrl: form.universityLogoUrl.trim(),
+        collegeLogoUrl: form.collegeLogoUrl.trim(),
         bannerImageUrl: form.bannerImageUrl.trim(),
         description: form.description.trim(),
       };
@@ -182,7 +177,7 @@ export default function ManagePrograms() {
       {/* ── HEADER ── */}
       <div className="mp-header">
         <div>
-          <div className="mp-breadcrumb">University Portal · Programs</div>
+          <div className="mp-breadcrumb">college Portal · Programs</div>
           <h1 className="mp-title">Manage Offers</h1>
           <p className="mp-subtitle">Create and manage scholarship offers for students.</p>
         </div>
@@ -244,21 +239,23 @@ export default function ManagePrograms() {
                   {p.isActive ? "Active" : "Inactive"}
                 </div>
                 <div className="mp-card-logo">
-                  {p.universityLogoUrl
-                    ? <img src={p.universityLogoUrl} alt="logo" style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  {p.collegeLogoUrl
+                    ? <img src={p.collegeLogoUrl} alt="logo" style={{ width: "100%", height: "100%", objectFit: "cover" }}
                       onError={(e) => { e.currentTarget.style.display = "none"; }} />
-                    : <span className="mp-card-logo-fb">{(p.universityName || "U")[0]}</span>
+                    : <span className="mp-card-logo-fb">{(p.collegeName || "U")[0]}</span>
                   }
                 </div>
               </div>
 
               {/* Card body */}
               <div className="mp-card-body">
-                <div className="mp-card-univ">{p.universityName}</div>
+                <div className="mp-card-univ">{p.collegeName}</div>
 
                 {p.affiliation ? (
                   <div className="mp-card-qs">
-                    <div className="mp-qs-dot">Affiliated to</div>
+                    <div className="px-[6px] h-[22px] rounded-full bg-[#d97706] text-white text-[9px] font-black tracking-[0.3px] flex items-center justify-center shrink-0">
+                      {p.affiliation.charAt(0).toUpperCase()}
+                    </div>
                     {p.affiliation}
                   </div>
                 ) : p.country ? (
@@ -344,7 +341,7 @@ export default function ManagePrograms() {
                     </div>
                   </div>
                   <div className="mp-field">
-                    <label className="mp-label">Location</label>
+                    <label className="mp-label">Locations</label>
                     <div className="mp-input-wrap">
                       <Globe size={14} className="mp-input-icon" />
                       <input className="mp-input" placeholder="e.g. Kathmandu" value={form.country} onChange={onChange("country")} />
@@ -409,7 +406,7 @@ export default function ManagePrograms() {
                     </div>
                   </div>
                   <div className="mp-field">
-                    <label className="mp-label">Affiliation (University Name)</label>
+                    <label className="mp-label">Affiliation (college Name)</label>
                     <div className="mp-input-wrap">
                       <Award size={14} className="mp-input-icon" />
                       <input className="mp-input" placeholder="e.g. TU, PU" value={form.affiliation} onChange={onChange("affiliation")} />
@@ -419,10 +416,10 @@ export default function ManagePrograms() {
 
                 <div className="mp-section-sep">Media URLs</div>
                 <div className="mp-field">
-                  <label className="mp-label">University Logo URL</label>
+                  <label className="mp-label">college Logo URL</label>
                   <div className="mp-input-wrap">
                     <Image size={14} className="mp-input-icon" />
-                    <input className="mp-input" placeholder="https://..." value={form.universityLogoUrl} onChange={onChange("universityLogoUrl")} />
+                    <input className="mp-input" placeholder="https://..." value={form.collegeLogoUrl} onChange={onChange("collegeLogoUrl")} />
                   </div>
                 </div>
                 <div className="mp-field">

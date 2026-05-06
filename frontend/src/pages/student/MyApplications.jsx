@@ -22,14 +22,14 @@ function ApplicationCard({ item }) {
   const offerText = p.description
     ? p.description
     : [
-      p.scholarshipAmount > 0 && `$${money(p.scholarshipAmount)} Scholarship`,
-      p.tuitionTotal > 0 && `$${money(p.tuitionTotal)} Tuition`,
+      p.scholarshipAmount > 0 && `Nrs${money(p.scholarshipAmount)} Scholarship`,
+      p.tuitionTotal > 0 && `Nrs${money(p.tuitionTotal)} Tuition`,
     ]
       .filter(Boolean)
       .join(", ") || "View details for full offer information";
 
   const status = (item.status || "").toLowerCase();
-  
+
   // Tailwind status badge colors
   let statusBadgeClasses = "bg-white/95 border-[1.5px] ";
   if (status === "pending") {
@@ -65,10 +65,10 @@ function ApplicationCard({ item }) {
         )}
 
         <div className="absolute left-5 -bottom-7 w-20 h-20 rounded-[18px] bg-white border-2 border-brand-border flex items-center justify-center shadow-[0_8px_24px_rgba(13,45,63,0.13)] overflow-hidden z-[2] shrink-0">
-          {p.universityLogoUrl ? (
+          {p.collegeLogoUrl ? (
             <img
-              src={p.universityLogoUrl}
-              alt={p.universityName || "Logo"}
+              src={p.collegeLogoUrl}
+              alt={p.collegeName || "Logo"}
               className="w-full h-full object-cover"
               onError={(e) => {
                 e.currentTarget.style.display = "none";
@@ -76,14 +76,14 @@ function ApplicationCard({ item }) {
             />
           ) : (
             <span className="text-[28px] font-black text-brand font-sans">
-              {(p.universityName || "U")[0].toUpperCase()}
+              {(p.collegeName || "U")[0].toUpperCase()}
             </span>
           )}
         </div>
       </div>
 
       <div className="pt-[38px] px-5 pb-4 flex-1 flex flex-col gap-3">
-        <div className="text-[18px] font-black text-brand-dark tracking-[-0.4px] leading-[1.2]">{p.universityName || "University"}</div>
+        <div className="text-[18px] font-black text-brand-dark tracking-[-0.4px] leading-[1.2]">{p.collegeName || "college"}</div>
         <div className="text-[15px] font-bold text-brand-text">
           {p.title || p.programName || p.courseName || item.programTitle || "Program"}
         </div>
@@ -156,7 +156,7 @@ export default function MyApplications() {
       <div className="mb-7">
         <h1 className="text-[26px] font-black text-brand-dark tracking-[-0.8px] mb-1.5">My Applications</h1>
         <p className="text-[14px] text-brand-muted font-normal leading-[1.6]">
-          Track the status of your university applications.
+          Track the status of your college applications.
         </p>
       </div>
 

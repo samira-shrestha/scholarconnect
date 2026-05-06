@@ -7,7 +7,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth");
 const programRoutes = require("./routes/programs");
 const applicationRoutes = require("./routes/applications");
-const universityDashboardRoutes = require("./routes/universityDashboard");
+const collegeDashboardRoutes = require("./routes/collegeDashboard");
 const adminRoutes = require("./routes/admin");
 const app = express();
 
@@ -36,7 +36,7 @@ app.get("/api/ping", (req, res) =>
 app.use("/api/auth", authRoutes);
 app.use("/api/programs", programRoutes);
 app.use("/api/applications", applicationRoutes);
-app.use("/api/university/dashboard", universityDashboardRoutes);
+app.use("/api/college/dashboard", collegeDashboardRoutes);
 app.use("/api/admin", adminRoutes);
 
 const PORT = process.env.PORT || 5050;

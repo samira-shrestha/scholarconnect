@@ -8,7 +8,7 @@ const { auth, requireRole } = require("../middleware/auth");
 router.get("/", async (req, res) => {
   try {
     const programsRaw = await Program.find({ isActive: true })
-      .populate("universityId", "isVerified")
+      .populate("collegeId", "isVerified")
       .sort({ createdAt: -1 })
       .lean();
 
@@ -28,13 +28,13 @@ router.get("/", async (req, res) => {
       if (student && student.role === "student") {
         let score = 0;
 
-        // Location Match (25%)
-        if (p.country && student.preferredLocation) {
-          if (p.country.toLowerCase() === student.preferredLocation.toLowerCase()) {
+        // Locations Match (25%)
+        if (p.country && student.preferredLocations) {
+          if (p.country.toLowerCase() === student.preferredLocations.toLowerCase()) {
             score += 25;
           }
         } else if (!p.country) {
-          score += 25; // if program has no location requirement, it's a match
+          score += 25; // if program has no Locations requirement, it's a match
         }
 
         // Budget Match (25%)
@@ -54,7 +54,7 @@ router.get("/", async (req, res) => {
         }
 
         // GPA Eligibility (25%)
-        // program does not have gpaRequired in the model wait, let me check Program model (tuitionTotal, scholarshipAmount but no gpaRequired?). Wait, the UI has gpaRequired in ProgramCard.
+
         if (!p.gpaRequired) {
           score += 25; // assuming match if no gpa required
         } else if (student.gpa && student.gpa >= p.gpaRequired) {
@@ -75,8 +75,8 @@ router.get("/", async (req, res) => {
 
       return {
         ...p,
-        universityIsVerified: p.universityId?.isVerified || false,
-        universityId: p.universityId?._id || p.universityId,
+        collegeIsVerified: p.collegeId?.isVerified || false,
+        collegeId: p.collegeId?._id || p.collegeId,
         matchPercentage
       };
     });
@@ -87,10 +87,10 @@ router.get("/", async (req, res) => {
   }
 });
 
-//  GET /api/programs/mine/list (university only)
-router.get("/mine/list", auth, requireRole("university"), async (req, res) => {
+//  GET /api/programs/mine/list (college only)
+router.get("/mine/list", auth, requireRole("college"), async (req, res) => {
   try {
-    const programs = await Program.find({ universityId: req.user.id }).sort({ createdAt: -1 });
+    const programs = await Program.find({ collegeId: req.user.id }).sort({ createdAt: -1 });
     res.json({ programs });
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch your programs" });
@@ -101,14 +101,14 @@ router.get("/mine/list", auth, requireRole("university"), async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const programRaw = await Program.findById(req.params.id)
-      .populate("universityId", "isVerified")
+      .populate("collegeId", "isVerified")
       .lean();
     if (!programRaw) return res.status(404).json({ message: "Program not found" });
 
     const program = {
       ...programRaw,
-      universityIsVerified: programRaw.universityId?.isVerified || false,
-      universityId: programRaw.universityId?._id || programRaw.universityId
+      collegeIsVerified: programRaw.collegeId?.isVerified || false,
+      collegeId: programRaw.collegeId?._id || programRaw.collegeId
     };
 
     res.json({ program });
@@ -117,8 +117,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//  POST /api/programs (university only)  -> now creates an "Offer"
-router.post("/", auth, requireRole("university"), async (req, res) => {
+//  POST /api/programs (college only)  -> now creates an "Offer"
+router.post("/", auth, requireRole("college"), async (req, res) => {
   try {
     const {
       title,
@@ -127,7 +127,7 @@ router.post("/", auth, requireRole("university"), async (req, res) => {
       description,
 
       //  new card fields
-      universityLogoUrl,
+      collegeLogoUrl,
       bannerImageUrl,
       tuitionTotal,
       scholarshipPercentage,
@@ -140,10 +140,10 @@ router.post("/", auth, requireRole("university"), async (req, res) => {
     if (!title) return res.status(400).json({ message: "Title is required" });
 
     const program = await Program.create({
-      universityId: req.user.id,
-      universityName: req.user.name,
+      collegeId: req.user.id,
+      collegeName: req.user.name,
 
-      universityLogoUrl: (universityLogoUrl || "").trim(),
+      collegeLogoUrl: (collegeLogoUrl || "").trim(),
       bannerImageUrl: (bannerImageUrl || "").trim(),
 
       title: String(title).trim(),
@@ -169,15 +169,15 @@ router.post("/", auth, requireRole("university"), async (req, res) => {
   }
 });
 
-//  PATCH /api/programs/:id (toggle isActive - university owner only)
-router.patch("/:id", auth, requireRole("university"), async (req, res) => {
+//  PATCH /api/programs/:id (toggle isActive - college owner only)
+router.patch("/:id", auth, requireRole("college"), async (req, res) => {
   try {
     const { isActive } = req.body;
 
     const program = await Program.findById(req.params.id);
     if (!program) return res.status(404).json({ message: "Program not found" });
 
-    if (String(program.universityId) !== String(req.user.id))
+    if (String(program.collegeId) !== String(req.user.id))
       return res.status(403).json({ message: "Not your program" });
 
     program.isActive = Boolean(isActive);
@@ -189,13 +189,13 @@ router.patch("/:id", auth, requireRole("university"), async (req, res) => {
   }
 });
 
-//  DELETE /api/programs/:id (university owner only)
-router.delete("/:id", auth, requireRole("university"), async (req, res) => {
+//  DELETE /api/programs/:id (college owner only)
+router.delete("/:id", auth, requireRole("college"), async (req, res) => {
   try {
     const program = await Program.findById(req.params.id);
     if (!program) return res.status(404).json({ message: "Program not found" });
 
-    if (String(program.universityId) !== String(req.user.id))
+    if (String(program.collegeId) !== String(req.user.id))
       return res.status(403).json({ message: "Not your program" });
 
     await program.deleteOne();
@@ -205,15 +205,15 @@ router.delete("/:id", auth, requireRole("university"), async (req, res) => {
   }
 });
 
-//  PUT /api/programs/:id (update program - university owner only)
-router.put("/:id", auth, requireRole("university"), async (req, res) => {
+//  PUT /api/programs/:id (update program - college owner only)
+router.put("/:id", auth, requireRole("college"), async (req, res) => {
   try {
     const {
       title,
       country,
       deadline,
       description,
-      universityLogoUrl,
+      collegeLogoUrl,
       bannerImageUrl,
       tuitionTotal,
       scholarshipPercentage,
@@ -226,7 +226,7 @@ router.put("/:id", auth, requireRole("university"), async (req, res) => {
     const program = await Program.findById(req.params.id);
     if (!program) return res.status(404).json({ message: "Program not found" });
 
-    if (String(program.universityId) !== String(req.user.id))
+    if (String(program.collegeId) !== String(req.user.id))
       return res.status(403).json({ message: "Not your program" });
 
     if (!title) return res.status(400).json({ message: "Title is required" });
@@ -240,7 +240,7 @@ router.put("/:id", auth, requireRole("university"), async (req, res) => {
     program.scholarshipAmount = Number(scholarshipAmount || 0);
     program.deadline = deadline ? new Date(deadline) : null;
     program.affiliation = (affiliation || "").trim();
-    program.universityLogoUrl = (universityLogoUrl || "").trim();
+    program.collegeLogoUrl = (collegeLogoUrl || "").trim();
     program.bannerImageUrl = (bannerImageUrl || "").trim();
     program.description = (description || "").trim();
 

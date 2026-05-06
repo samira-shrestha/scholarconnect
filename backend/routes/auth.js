@@ -31,7 +31,7 @@ router.post("/register", async (req, res) => {
       gpa,
       qualificationLevel,
       budget,
-      preferredLocation,
+      preferredLocations,
       preferredCourse,
     } = req.body;
 
@@ -41,7 +41,7 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    if (!["student", "university", "admin"].includes(role)) {
+    if (!["student", "college", "admin"].includes(role)) {
       return res.status(400).json({ message: "Invalid role" });
     }
 
@@ -62,13 +62,13 @@ router.post("/register", async (req, res) => {
       password: hashed,
       role,
 
-      // keep this for your existing university/admin approval logic
+      // keep this for your existing college/admin approval logic
       isVerified: true,
 
       // new email verification field
-      emailVerified: role === "university" ? true : false,
-      emailVerificationToken: role === "university" ? undefined : emailVerificationToken,
-      emailVerificationTokenExpires: role === "university" ? undefined : Date.now() + 60 * 60 * 1000,
+      emailVerified: role === "college" ? true : false,
+      emailVerificationToken: role === "college" ? undefined : emailVerificationToken,
+      emailVerificationTokenExpires: role === "college" ? undefined : Date.now() + 60 * 60 * 1000,
     };
 
     if (role === "student") {
@@ -77,8 +77,8 @@ router.post("/register", async (req, res) => {
         userPayload.qualificationLevel = String(qualificationLevel).trim();
       }
       if (budget !== undefined && budget !== "") userPayload.budget = Number(budget);
-      if (preferredLocation !== undefined && preferredLocation !== "") {
-        userPayload.preferredLocation = String(preferredLocation).trim();
+      if (preferredLocations !== undefined && preferredLocations !== "") {
+        userPayload.preferredLocations = String(preferredLocations).trim();
       }
       if (preferredCourse !== undefined && preferredCourse !== "") {
         userPayload.preferredCourse = String(preferredCourse).trim();

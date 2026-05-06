@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function AdminDashboard() {
-    const [universities, setUniversities] = useState([]);
+    const [college, setcollege] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const token = localStorage.getItem("token");
 
-    // Fetch all universities
-    const fetchUniversities = async () => {
+    // Fetch all college
+    const fetchcollege = async () => {
         try {
             setLoading(true);
 
             const res = await axios.get(
-                "http://localhost:5050/api/admin/universities",
+                "http://localhost:5050/api/admin/college",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -21,24 +21,24 @@ export default function AdminDashboard() {
                 }
             );
 
-            setUniversities(res.data);
+            setcollege(res.data);
         } catch (error) {
             console.error(error);
-            alert(error.response?.data?.message || "Failed to load universities");
+            alert(error.response?.data?.message || "Failed to load college");
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchUniversities();
+        fetchcollege();
     }, []);
 
     // Toggle verify
     const handleToggleVerify = async (id) => {
         try {
             await axios.patch(
-                `http://localhost:5050/api/admin/universities/${id}/verify`,
+                `http://localhost:5050/api/admin/college/${id}/verify`,
                 {},
                 {
                     headers: {
@@ -47,36 +47,13 @@ export default function AdminDashboard() {
                 }
             );
 
-            fetchUniversities(); // refresh list
+            fetchcollege(); // refresh list
         } catch (error) {
             console.error(error);
             alert(error.response?.data?.message || "Failed to update verification");
         }
     };
 
-    // Delete university
-    const handleDelete = async (id) => {
-        const confirmDelete = window.confirm(
-            "Are you sure you want to delete this university?"
-        );
-        if (!confirmDelete) return;
-
-        try {
-            await axios.delete(
-                `http://localhost:5050/api/admin/universities/${id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            fetchUniversities(); // refresh list
-        } catch (error) {
-            console.error(error);
-            alert(error.response?.data?.message || "Failed to delete university");
-        }
-    };
 
     return (
         <div className="p-6">
@@ -84,16 +61,16 @@ export default function AdminDashboard() {
             <div className="mb-6">
                 <h1 className="text-2xl font-bold">Admin Dashboard</h1>
                 <p className="text-gray-500">
-                    Manage university verification and accounts
+                    Manage college verification and accounts
                 </p>
             </div>
 
             {/* Table */}
             <div className="bg-white rounded-xl shadow border overflow-hidden">
                 {loading ? (
-                    <div className="p-6">Loading universities...</div>
-                ) : universities.length === 0 ? (
-                    <div className="p-6">No universities found.</div>
+                    <div className="p-6">Loading college...</div>
+                ) : college.length === 0 ? (
+                    <div className="p-6">No college found.</div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[800px]">
@@ -108,7 +85,7 @@ export default function AdminDashboard() {
                             </thead>
 
                             <tbody>
-                                {universities.map((uni) => (
+                                {college.map((uni) => (
                                     <tr key={uni._id} className="border-t">
                                         <td className="px-6 py-4 font-medium">{uni.name}</td>
                                         <td className="px-6 py-4 text-gray-600">
@@ -145,12 +122,7 @@ export default function AdminDashboard() {
                                                     {uni.isVerified ? "Unverify" : "Verify"}
                                                 </button>
 
-                                                <button
-                                                    onClick={() => handleDelete(uni._id)}
-                                                    className="px-4 py-2 rounded-lg bg-red-600 text-white"
-                                                >
-                                                    Delete
-                                                </button>
+
                                             </div>
                                         </td>
                                     </tr>

@@ -88,7 +88,7 @@ function HeroIllustration() {
         repeatCount="indefinite"
       />
 
-      {/* Floating card: University badge */}
+      {/* Floating card: college badge */}
       <g style={{ filter: "drop-shadow(0 6px 16px rgba(13,45,63,0.12))" }}>
         <rect x="22" y="148" width="138" height="66" rx="14" fill="white" />
         <rect x="22" y="148" width="138" height="66" rx="14" stroke="#81C5A6" strokeWidth="1.2" strokeOpacity="0.4" />
@@ -140,17 +140,17 @@ function HeroIllustration() {
 /* DATA */
 const WHY = [
   { Icon: Search, title: "Smart Matching", desc: "Our system matches students to programs based on academic profile, goals, and budget — no guessing involved." },
-  { Icon: Zap, title: "Fast Applications", desc: "Apply to multiple universities in minutes. One profile, one process, zero repetition across forms." },
+  { Icon: Zap, title: "Fast Applications", desc: "Apply to multiple college in minutes. One profile, one process, zero repetition across forms." },
   { Icon: Award, title: "Verified Programs", desc: "Every listing is verified directly from partner institutions, ensuring accurate requirements and deadlines." },
   { Icon: TrendingUp, title: "Transparent Process", desc: "See eligibility, costs, and deadlines clearly before you apply. No surprises, no hidden fees." },
-  { Icon: Globe, title: "Global Reach", desc: "Access programs from universities across the world — all connected in one unified platform." },
-  { Icon: Users, title: "Dedicated Support", desc: "Students and universities both receive ongoing guidance throughout the entire application journey." },
+  { Icon: Globe, title: "Global Reach", desc: "Access programs from college across the world — all connected in one unified platform." },
+  { Icon: Users, title: "Dedicated Support", desc: "Students and college both receive ongoing guidance throughout the entire application journey." },
 ];
 
 const SOLUTIONS = [
-  { Icon: FileText, title: "Centralized Applications", desc: "Manage all your university applications from a single, beautifully organized dashboard.", alt: false },
-  { Icon: Bell, title: "Real-time Notifications", desc: "Get instant alerts when universities view, shortlist, or respond to your application.", alt: false },
-  { Icon: BarChart3, title: "University Analytics", desc: "Institutions gain powerful insights into applicant quality, program demand, and conversion.", alt: true },
+  { Icon: FileText, title: "Centralized Applications", desc: "Manage all your college applications from a single, beautifully organized dashboard.", alt: false },
+  { Icon: Bell, title: "Real-time Notifications", desc: "Get instant alerts when college view, shortlist, or respond to your application.", alt: false },
+  { Icon: BarChart3, title: "college Analytics", desc: "Institutions gain powerful insights into applicant quality, program demand, and conversion.", alt: true },
   { Icon: Lock, title: "Secure Document Sharing", desc: "Safely upload and share transcripts and supporting documents with verified institutions.", alt: true },
 ];
 
@@ -164,7 +164,7 @@ const STEPS = [
 const TESTIMONIALS = [
   {
     name: "Samira Shrestha", role: "Computer Science Student",
-    quote: "ScholarConnect made finding the right program so much easier. I applied to five universities in one afternoon — something that would have taken me weeks before.",
+    quote: "ScholarConnect made finding the right program so much easier. I applied to five college in one afternoon — something that would have taken me weeks before.",
     color: "#3aa1c9", initials: "SS", stars: 5,
   },
   {
@@ -247,7 +247,7 @@ export default function Landing() {
           </h1>
 
           <p className="sc-hero-desc">
-            ScholarConnect bridges ambitious students with the world's best universities.
+            ScholarConnect bridges ambitious students with the world's best college.
             Browse programs, apply in minutes, and let the right institutions find you.
           </p>
 
@@ -255,8 +255,8 @@ export default function Landing() {
             <Link className="sc-btn sc-btn-p" to="/student/register">
               Start for Free <ArrowRight size={15} />
             </Link>
-            <Link className="sc-btn sc-btn-o" to="/university/register">
-              For Universities
+            <Link className="sc-btn sc-btn-o" to="/college/register">
+              For college
             </Link>
           </div>
 
@@ -267,7 +267,7 @@ export default function Landing() {
             </div>
             <div className="sc-stat">
               <div className="sc-stat-n">50+</div>
-              <div className="sc-stat-l">Universities</div>
+              <div className="sc-stat-l">Colleges</div>
             </div>
             <div className="sc-stat">
               <div className="sc-stat-n">94%</div>
@@ -295,13 +295,13 @@ export default function Landing() {
               <div className="sc-portal-icon-wrap">
                 <Building2 size={22} strokeWidth={2} />
               </div>
-              <div className="sc-portal-title">I'm a University</div>
+              <div className="sc-portal-title">I'm a College</div>
               <p className="sc-portal-desc">Review applications, manage programs, and discover great students.</p>
               <div className="sc-portal-actions">
-                <Link className="sc-btn sc-btn-s sc-btn-sm" to="/university/login">
+                <Link className="sc-btn sc-btn-s sc-btn-sm" to="/college/login">
                   <LogIn size={13} /> Log In
                 </Link>
-                <Link className="sc-btn sc-btn-o sc-btn-sm" to="/university/register">Register</Link>
+                <Link className="sc-btn sc-btn-o sc-btn-sm" to="/college/register">Register</Link>
               </div>
             </div>
           </div>
@@ -344,7 +344,7 @@ export default function Landing() {
               <div className="sc-tag"><Zap size={13} /> Our Solutions</div>
               <h2 className="sc-h2">Everything you need, <b>in one place</b></h2>
               <p className="sc-sub">
-                Whether you're a student chasing a scholarship or a university recruiting top talent,
+                Whether you're a student chasing a scholarship or a college recruiting top talent,
                 ScholarConnect gives you the tools to move faster and decide smarter.
               </p>
               <div className="sc-sol-list">
@@ -390,9 +390,9 @@ export default function Landing() {
         <div className="sc-wrap">
           <div className="sc-testi-head">
             <div className="sc-tag"><Star size={13} /> Testimonials</div>
-            <h2 className="sc-h2">Loved by <b>students &amp; universities</b></h2>
+            <h2 className="sc-h2">Loved by <b>students &amp; college</b></h2>
             <p className="sc-sub">
-              Thousands of students have found their dream programs and universities have discovered
+              Thousands of students have found their dream programs and college have discovered
               outstanding talent — all through ScholarConnect.
             </p>
           </div>
@@ -435,8 +435,8 @@ export default function Landing() {
             <Link className="sc-btn sc-btn-white" to="/student/register">
               <UserPlus size={15} /> Start as a Student
             </Link>
-            <Link className="sc-btn sc-btn-ghost-w" to="/university/register">
-              <Building2 size={15} /> List Your University
+            <Link className="sc-btn sc-btn-ghost-w" to="/college/register">
+              <Building2 size={15} /> List Your College
             </Link>
           </div>
         </div>
